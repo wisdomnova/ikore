@@ -39,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden">
       <body className={`${poppins.variable} ${roboto.variable} antialiased overflow-x-hidden`}>
         {children}
       </body>

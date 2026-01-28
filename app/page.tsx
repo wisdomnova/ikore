@@ -596,7 +596,7 @@ export default function LandingPage() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="bg-gray-50 py-24">
+      <section id="projects" className="bg-gray-50 py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4 md:px-8">
           <motion.div 
             className="text-center mb-16"
@@ -605,88 +605,67 @@ export default function LandingPage() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-3 sm:mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
               Our Projects
             </h2>
-            <p className="text-gray-700 text-lg">
+            <p className="text-base sm:text-lg text-gray-700 px-4 sm:px-0">
               A showcase of our latest initiatives driving impact across Africa
             </p>
           </motion.div>
 
           {/* Horizontal Slider */}
-          <div className="relative mb-12">
-            {/* Slider Container */}
-            <div className="overflow-hidden">
+          <div className="relative mb-8 sm:mb-10 md:mb-12 py-4 sm:py-8 md:py-12">
+            {/* Fade gradient on right edge - indicates more content */}
+            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none z-10 hidden sm:block"></div>
+            
+            {/* Scroll hint for mobile */}
+            <div className="flex items-center justify-end gap-2 mb-4 sm:hidden text-gray-500 text-sm">
+              <span>Swipe to see more</span>
+              <svg className="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+            
+            {/* Slider Container - CSS Scroll Snap for smooth scrolling */}
+            <div className="overflow-x-auto scrollbar-hide py-6 sm:py-8 -mx-4 px-4 md:mx-0 md:px-0">
               <motion.div 
-                className="flex gap-6 transition-transform duration-500 ease-in-out"
-                animate={{ x: `-${currentSlide * 100}%` }}
+                className="flex gap-4 md:gap-6 pb-4 pr-4 sm:pr-0"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
               >
                 {projects.map((project, index) => (
                   <motion.div
                     key={project.id}
-                    className="group min-w-full md:min-w-[calc(50%-12px)] lg:min-w-[calc(33.333%-16px)] bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-green-600 transition-all relative"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
+                    className="group flex-shrink-0 w-[90%] sm:w-[70%] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-green-600 transition-all relative"
+                    variants={staggerItem}
                     whileHover={{ y: -8 }}
                   >
                     {/* Decorative corner accent */}
                     <div className="absolute top-0 right-0 w-24 h-24 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity z-10"></div>
                     
-                    <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 h-64 flex items-center justify-center text-gray-500 group-hover:scale-105 transition-transform duration-500">
+                    <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 h-48 sm:h-56 md:h-64 flex items-center justify-center text-gray-500 group-hover:scale-105 transition-transform duration-500">
                       {project.image}
                       {/* Overlay gradient on hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
-                    <div className="p-6 relative">
+                    <div className="p-4 sm:p-5 md:p-6 relative">
                       {/* Small green accent line */}
-                      <div className="absolute top-0 left-6 w-12 h-1 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
+                      <div className="absolute top-0 left-4 sm:left-5 md:left-6 w-10 sm:w-12 h-1 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
                       
-                      <h3 className="text-xl font-bold text-black mb-2 mt-3" style={{ fontFamily: 'var(--font-heading)' }}>
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-black mb-2 mt-2 sm:mt-3" style={{ fontFamily: 'var(--font-heading)' }}>
                         {project.name}
                       </h3>
-                      <p className="text-sm text-gray-600 mb-3">{project.category}</p>
+                      <p className="text-sm text-gray-600">{project.category}</p>
                     </div>
                   </motion.div>
                 ))}
               </motion.div>
             </div>
-
-            {/* Navigation Arrows */}
-            <button
-              onClick={prevSlide}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white hover:bg-green-600 text-gray-800 hover:text-white p-3 rounded-full shadow-lg transition-all z-10"
-              aria-label="Previous slide"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              onClick={nextSlide}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white hover:bg-green-600 text-gray-800 hover:text-white p-3 rounded-full shadow-lg transition-all z-10"
-              aria-label="Next slide"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Dots Indicator */}
-            <div className="flex justify-center gap-2 mt-8">
-              {projects.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    currentSlide === index ? 'bg-green-600 w-8' : 'bg-gray-300'
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
           </div>
+
+          {/* Removed navigation arrows - using native horizontal scroll */}
 
           <motion.div 
             className="text-center"
@@ -695,7 +674,7 @@ export default function LandingPage() {
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <a href="/projects" className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded font-semibold transition-colors">
+            <a href="/projects" className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 sm:px-8 py-3 rounded font-semibold transition-colors text-sm sm:text-base">
               View All Projects
               <ChevronRight size={20} />
             </a>
