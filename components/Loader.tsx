@@ -79,21 +79,39 @@ export default function Loader({ isVisible }: LoaderProps) {
           </div>
 
           {/* Tagline - Typewriter Effect */}
-          <div className="h-4 flex items-center mb-16">
+          <div className="h-4 flex items-center justify-center mb-16 w-full px-6">
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-white/40 text-[10px] uppercase font-black tracking-[0.4em]"
+              className="text-white/40 text-[10px] uppercase font-black text-center tracking-[0.25em] sm:tracking-[0.4em] whitespace-nowrap"
             >
-              {"Cultivating Sustainable Impact".split("").map((char, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 + (i * 0.04), duration: 0.1 }}
-                >
-                  {char}
-                </motion.span>
+              {[
+                "Cultivating",
+                "Sustainable Impact",
+              ].map((line, lineIndex) => (
+                <span key={lineIndex} className="inline">
+                  {line.split("").map((char, charIndex) => {
+                    const previousChars = lineIndex === 0 ? 0 : "Cultivating".length + 1;
+                    const animationIndex = previousChars + charIndex;
+
+                    return (
+                      <motion.span
+                        key={`${lineIndex}-${charIndex}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 + (animationIndex * 0.04), duration: 0.1 }}
+                      >
+                        {char}
+                      </motion.span>
+                    );
+                  })}
+                  {lineIndex === 0 ? (
+                    <>
+                      <br className="sm:hidden" />
+                      <span className="hidden sm:inline"> </span>
+                    </>
+                  ) : null}
+                </span>
               ))}
               <motion.span
                 animate={{ opacity: [1, 0] }}
