@@ -1,191 +1,135 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sprout } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface LoaderProps {
   isVisible: boolean;
 }
 
 export default function Loader({ isVisible }: LoaderProps) {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, transition: { duration: 0.5 } }
-  };
+  const [counter, setCounter] = useState(0);
 
-  const eyeVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    const interval = setInterval(() => {
+      setCounter((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 1;
+      });
+    }, 25); // ~2.5s to reach 100
 
-  // Eye left animation
-  const eyeLeftAnimation = {
-    hidden: { opacity: 0 },
-    lookCenter: { 
-      x: 0, 
-      transition: { delay: 0.5, duration: 0.3 }
-    },
-    lookLeft: { 
-      x: -8, 
-      transition: { delay: 1.2, duration: 0.4 }
-    },
-    lookRight: { 
-      x: 8, 
-      transition: { delay: 1.8, duration: 0.4 }
-    },
-    lookCenter2: { 
-      x: 0, 
-      transition: { delay: 2.4, duration: 0.3 }
-    },
-    blink: {
-      scaleY: 0.1,
-      transition: { delay: 2.9, duration: 0.2 }
-    },
-    closed: {
-      scaleY: 0.05,
-      transition: { delay: 3.1, duration: 0.3 }
-    }
-  };
+    return () => clearInterval(interval);
+  }, [isVisible]);
 
-  // Eye right animation (mirrored)
-  const eyeRightAnimation = {
-    hidden: { opacity: 0 },
-    lookCenter: { 
-      x: 0, 
-      transition: { delay: 0.5, duration: 0.3 }
-    },
-    lookLeft: { 
-      x: -8, 
-      transition: { delay: 1.2, duration: 0.4 }
-    },
-    lookRight: { 
-      x: 8, 
-      transition: { delay: 1.8, duration: 0.4 }
-    },
-    lookCenter2: { 
-      x: 0, 
-      transition: { delay: 2.4, duration: 0.3 }
-    },
-    blink: {
-      scaleY: 0.1,
-      transition: { delay: 2.9, duration: 0.2 }
-    },
-    closed: {
-      scaleY: 0.05,
-      transition: { delay: 3.1, duration: 0.3 }
-    }
-  };
-
-  // Only render loader when visible to avoid blocking interactions
   if (!isVisible) return null;
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      variants={containerVariants}
-      className="fixed inset-0 bg-white z-[9999] flex items-center justify-center"
-    >
-      <div className="flex flex-col items-center justify-center gap-4 sm:gap-8 px-4">
-        {/* Flowerpot with eyes */}
-        <div className="relative w-48 sm:w-60 md:w-80 h-56 sm:h-72 md:h-96">
-          <svg 
-            className="w-full h-full" 
-            viewBox="0 0 300 400" 
-            preserveAspectRatio="xMidYMid meet"
-          >
-            {/* Flower Stem - Green curved line */}
-            <motion.path
-              d="M 150 80 Q 140 120 145 160 Q 150 200 150 250"
-              stroke="#61af50"
-              strokeWidth="6"
-              fill="none"
-              strokeLinecap="round"
-              initial={{ pathLength: 0 }}
-              animate={isVisible ? { pathLength: 1 } : { pathLength: 0 }}
-              transition={{ duration: 1.2 }}
-            />
-
-            {/* Flower Head - Pink circle with petals */}
-            <motion.g
-              initial={{ opacity: 0, scale: 0 }}
-              animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              {/* Petals */}
-              <circle cx="150" cy="40" r="12" fill="#f472b6" />
-              <circle cx="180" cy="55" r="12" fill="#ec4899" />
-              <circle cx="185" cy="85" r="12" fill="#f472b6" />
-              <circle cx="150" cy="20" r="12" fill="#ec4899" />
-              <circle cx="115" cy="55" r="12" fill="#ec4899" />
-              <circle cx="115" cy="85" r="12" fill="#f472b6" />
-              
-              {/* Center */}
-              <circle cx="150" cy="65" r="15" fill="#fbbf24" />
-            </motion.g>
-
-            {/* Flowerpot - Clay brown pot shape */}
-            <motion.g
-              initial={{ opacity: 0, y: 50 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-            >
-              {/* Pot rim */}
-              <ellipse cx="150" cy="250" rx="80" ry="15" fill="#b8860b" />
-              
-              {/* Pot body - Trapezoid shape */}
-              <path
-                d="M 70 250 L 50 340 Q 50 360 70 365 L 230 365 Q 250 360 250 340 L 230 250 Z"
-                fill="#a0522d"
-                stroke="#8b4513"
-                strokeWidth="2"
-              />
-
-              {/* Pot shine/highlight */}
-              <ellipse cx="110" cy="300" rx="25" ry="40" fill="#cd853f" opacity="0.4" />
-            </motion.g>
-
-            {/* Left Eye - White base */}
-            <motion.g
-              initial="hidden"
-              animate={isVisible ? ['hidden', 'lookCenter', 'lookLeft', 'lookRight', 'lookCenter2', 'blink', 'closed'] : 'hidden'}
-              variants={eyeVariants}
-            >
-              {/* White circle background */}
-              <circle cx="90" cy="310" r="22" fill="white" stroke="#333" strokeWidth="2" />
-              
-              {/* Black pupil */}
-              <motion.circle
-                cx="90"
-                cy="310"
-                r="10"
-                fill="black"
-                variants={eyeLeftAnimation}
-              />
-            </motion.g>
-
-            {/* Right Eye - White base */}
-            <motion.g
-              initial="hidden"
-              animate={isVisible ? ['hidden', 'lookCenter', 'lookLeft', 'lookRight', 'lookCenter2', 'blink', 'closed'] : 'hidden'}
-              variants={eyeVariants}
-            >
-              {/* White circle background */}
-              <circle cx="210" cy="310" r="22" fill="white" stroke="#333" strokeWidth="2" />
-              
-              {/* Black pupil */}
-              <motion.circle
-                cx="210"
-                cy="310"
-                r="10"
-                fill="black"
-                variants={eyeRightAnimation}
-              />
-            </motion.g>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 1 }}
+        exit={{ 
+          opacity: 0,
+          transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] }
+        }}
+        className="fixed inset-0 bg-[#0a0a0a] z-[9999] flex flex-col items-center justify-center overflow-hidden"
+      >
+        {/* Grain Overlay */}
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-grain"></div>
+        
+        {/* Topography Detail (Subtle background) */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+          <svg width="100%" height="100%" viewBox="0 0 1000 1000">
+            <path d="M0 200 Q 250 150 500 200 T 1000 200" fill="none" stroke="white" strokeWidth="0.5" />
+            <path d="M0 400 Q 250 350 500 400 T 1000 400" fill="none" stroke="white" strokeWidth="0.5" />
+            <path d="M0 600 Q 250 550 500 600 T 1000 600" fill="none" stroke="white" strokeWidth="0.5" />
+            <path d="M0 800 Q 250 750 500 800 T 1000 800" fill="none" stroke="white" strokeWidth="0.5" />
           </svg>
         </div>
-      </div>
-    </motion.div>
+
+        {/* Central Element */}
+        <div className="relative z-10 flex flex-col items-center">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-12"
+          >
+            <div className="w-24 h-24 bg-green-600 rounded-[2.5rem] flex items-center justify-center text-white shadow-[0_0_50px_rgba(22,163,74,0.3)]">
+              <Sprout size={48} strokeWidth={1.5} />
+            </div>
+          </motion.div>
+
+          {/* Text Reveal */}
+          <div className="overflow-hidden mb-4">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="text-white text-5xl md:text-7xl font-bold tracking-tighter"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              IKORE
+            </motion.h1>
+          </div>
+
+          {/* Tagline - Typewriter Effect */}
+          <div className="h-4 flex items-center mb-16">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-white/40 text-[10px] uppercase font-black tracking-[0.4em]"
+            >
+              {"Cultivating Sustainable Impact".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 + (i * 0.04), duration: 0.1 }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+              <motion.span
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                className="inline-block w-1 h-3 bg-green-600/40 ml-1"
+              />
+            </motion.p>
+          </div>
+
+          {/* Progress Section */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-48 h-px bg-white/10 relative overflow-hidden">
+              <motion.div 
+                className="absolute inset-y-0 left-0 bg-green-600"
+                initial={{ width: 0 }}
+                animate={{ width: `${counter}%` }}
+                transition={{ duration: 0.1 }}
+              />
+            </div>
+            <motion.div 
+              className="text-white/60 text-sm font-mono tracking-widest"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              {counter.toString().padStart(3, '0')}%
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Decorative corner accents */}
+        <div className="absolute top-12 left-12 w-12 h-12 border-t-2 border-l-2 border-white/5 rounded-tl-3xl"></div>
+        <div className="absolute top-12 right-12 w-12 h-12 border-t-2 border-r-2 border-white/5 rounded-tr-3xl"></div>
+        <div className="absolute bottom-12 left-12 w-12 h-12 border-b-2 border-l-2 border-white/5 rounded-bl-3xl"></div>
+        <div className="absolute bottom-12 right-12 w-12 h-12 border-b-2 border-r-2 border-white/5 rounded-br-3xl"></div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
+

@@ -1,7 +1,7 @@
 'use client';
 
-import { ChevronRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { ChevronRight, Leaf, Sprout, Wind } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
@@ -9,12 +9,49 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Newsletter from '@/components/Newsletter';
 import Loader from '@/components/Loader';
+import { getProjects } from '@/lib/wordpress/queries';
+import { Project } from '@/lib/wordpress/types';
 
 export default function LandingPage() {
   const router = useRouter();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [fetchedProjects, setFetchedProjects] = useState<Project[]>([]);
+  const [cardWidth, setCardWidth] = useState(320);
+
+  // Responsive slider logic
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setCardWidth(320);
+      } else if (window.innerWidth < 1024) {
+        setCardWidth(380);
+      } else {
+        setCardWidth(420);
+      }
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fetch projects from WordPress
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const response = await getProjects(1, 7); // Limit to 7 for preview
+        if (response.projects && response.projects.length > 0) {
+          setFetchedProjects(response.projects);
+        }
+      } catch (error) {
+        console.error('Error fetching projects for landing page:', error);
+      }
+    }
+    fetchProjects();
+  }, []);
 
   // Loader effect - closes after 3.5 seconds
   useEffect(() => {
@@ -33,39 +70,53 @@ export default function LandingPage() {
     { id: 4, label: "Agricultural Innovation" }
   ];
 
-  const projects = [
+  const staticProjects = [
     {
       id: 1,
       name: "GAIN Project",
       category: "Maize Value Chain",
-      image: "[GAIN Project Image]"
+      image: "[GAIN Project Image]",
+      link: "/projects",
+      slug: "gain-project"
     },
     {
       id: 2,
       name: "GIZ Project",
       category: "Agricultural Value Chains",
-      image: "[GIZ Project Image]"
+      image: "[GIZ Project Image]",
+      link: "/projects",
+      slug: "giz-project"
     },
     {
       id: 3,
       name: "Take and Give (TAG)",
       category: "Women Empowerment",
-      image: "[TAG Project Image]"
+      image: "[TAG Project Image]",
+      link: "/projects",
+      slug: "tag-initiative"
     },
     {
       id: 4,
       name: "LIDISKI Project",
       category: "Livestock Disease Surveillance",
-      image: "[LIDISKI Project Image]"
+      image: "[LIDISKI Project Image]",
+      link: "/projects",
+      slug: "lidiski-project"
     }
   ];
 
+  const displayProjects = fetchedProjects.length > 0 ? fetchedProjects : staticProjects;
+
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % projects.length);
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: cardWidth + 32, behavior: 'smooth' });
+    }
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + projects.length) % projects.length);
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -(cardWidth + 32), behavior: 'smooth' });
+    }
   };
 
   // Animation variants
@@ -114,8 +165,26 @@ export default function LandingPage() {
     },
   };
 
+  const sentence = "Ikore Collaborates with Businesses, Corporations, NGOs to Unlock Africa's Sustainable Growth";
+  
+  const container = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.03,
+        delayChildren: 1.2,
+      },
+    },
+  };
+
+  const letter = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
-    <div className="w-full">
+    <div className="w-full overflow-x-hidden">
       <Loader isVisible={isLoading} />
       
       {/* Hide page content while loading */}
@@ -124,389 +193,456 @@ export default function LandingPage() {
           <Header />
 
           {/* Hero Section */}
-          <section className="relative bg-gradient-to-br from-white via-green-50/30 to-white overflow-hidden">
-            {/* Decorative background elements */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-green-600/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-green-600/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-            
-            {/* Curved accent line */}
-            <svg className="absolute top-0 right-0 w-full h-64 opacity-10 pointer-events-none" viewBox="0 0 1200 400" preserveAspectRatio="none">
-              <path d="M0,100 Q300,50 600,100 T1200,100 L1200,0 L0,0 Z" fill="#61af50" />
-            </svg>
-
-            <div className="relative max-w-6xl mx-auto px-4 md:px-8 py-24 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              {/* Hero Text */}
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={fadeInUp}
-                className="relative z-20"
-              >
-                {/* Accent line above text */}
-                <motion.div className="w-12 h-1 bg-green-600 mb-6 rounded" variants={fadeInUp}></motion.div>
-                
-                <motion.h1 
-                  className="text-4xl md:text-5xl font-bold text-black mb-6" 
-                  style={{ fontFamily: 'var(--font-heading)' }}
-                  variants={fadeInUp}
-                >
-                  Ikore Collaborates with Businesses, Corporations, NGOs to Unlock Africa's Sustainable Growth
-                </motion.h1>
-                <motion.p 
-                  className="text-lg text-gray-700 mb-8 leading-relaxed"
-                  variants={fadeInUp}
-                >
-                  We deliver evidence-based solutions that drive impact and scale across Africa's development landscape through project management, capacity building, value chain development, research, and advisory services.
-                </motion.p>
-                <motion.button 
-                  onClick={() => router.push('/about')}
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded transition-colors font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl cursor-pointer relative z-20"
-                  variants={fadeInUp}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Discover More
-                  <ChevronRight size={20} />
-                </motion.button>
-              </motion.div>
-
-              {/* Hero Image Placeholder - Offset Stacked Boxes */}
-              <motion.div 
-                className="relative h-96 md:h-full min-h-96"
-                variants={slideInRight}
-                initial="hidden"
-                animate="visible"
-              >
-                {/* Layer 4 - Back */}
-                <motion.div 
-                  className="absolute inset-0 bg-white rounded-2xl border-2 border-gray-200 translate-x-4 translate-y-4 sm:translate-x-12 sm:translate-y-12 md:translate-x-20 md:translate-y-20 cursor-pointer"
-                  onClick={() => setSelectedImage(3)}
-                  whileHover={{ borderColor: "#61af50" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center text-gray-700 font-semibold">
-                    {heroImages[3].label}
-                  </div>
-                </motion.div>
-                
-                {/* Layer 3 */}
-                <motion.div 
-                  className="absolute inset-0 bg-white rounded-2xl border-2 border-gray-200 translate-x-3 translate-y-3 sm:translate-x-8 sm:translate-y-8 md:translate-x-14 md:translate-y-14 cursor-pointer"
-                  onClick={() => setSelectedImage(2)}
-                  whileHover={{ borderColor: "#61af50" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center text-gray-700 font-semibold">
-                    {heroImages[2].label}
-                  </div>
-                </motion.div>
-                
-                {/* Layer 2 */}
-                <motion.div 
-                  className="absolute inset-0 bg-white rounded-2xl border-2 border-gray-200 translate-x-2 translate-y-2 sm:translate-x-4 sm:translate-y-4 md:translate-x-8 md:translate-y-8 cursor-pointer"
-                  onClick={() => setSelectedImage(1)}
-                  whileHover={{ borderColor: "#61af50" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center text-gray-700 font-semibold">
-                    {heroImages[1].label}
-                  </div>
-                </motion.div>
-                
-                {/* Layer 1 - Front */}
-                <motion.div 
-                  className="relative inset-0 bg-white rounded-2xl border-2 border-gray-200 h-full cursor-pointer overflow-hidden"
-                  onClick={() => setSelectedImage(0)}
-                  whileHover={{ borderColor: "#61af50" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center text-gray-700 font-semibold">
-                    {heroImages[0].label}
-                  </div>
-                </motion.div>
-              </motion.div>
+          <section className="relative min-h-[90vh] flex items-center bg-white overflow-hidden">
+            {/* Intricate Agriculture Detail: Subtle Topography/Soil Lines (Easter Egg) */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+              <svg width="100%" height="100%" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 200 Q 250 150 500 200 T 1000 200" fill="none" stroke="#61af50" strokeWidth="1" />
+                <path d="M0 400 Q 250 350 500 400 T 1000 400" fill="none" stroke="#61af50" strokeWidth="1" />
+                <path d="M0 600 Q 250 550 500 600 T 1000 600" fill="none" stroke="#61af50" strokeWidth="1" />
+                <path d="M0 800 Q 250 750 500 800 T 1000 800" fill="none" stroke="#61af50" strokeWidth="1" />
+              </svg>
             </div>
+
+            <div className="max-w-7xl mx-auto px-4 md:px-8 pt-32 pb-20 md:pt-48 md:pb-32 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative">
+              
+              {/* Left Column: Content */}
+              <div className="lg:col-span-7 relative z-10">
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={fadeInUp}
+                  className="space-y-8"
+                >
+                  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-green-50 border border-green-100 text-green-700 text-xs font-bold uppercase tracking-[0.2em]">
+                    <Sprout size={14} className="text-green-600" />
+                    Sustainable Growth
+                  </div>
+
+                  <motion.h1 
+                    variants={container}
+                    initial="hidden"
+                    animate="visible"
+                    className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight min-h-[5em] sm:min-h-[4em] md:min-h-[4em]" 
+                    style={{ fontFamily: 'var(--font-heading)' }}
+                  >
+                    {sentence.split("").map((char, index) => {
+                      // Character range for "Unlock Africa's"
+                      // "Ikore Collaborates with Businesses, Corporations, NGOs to " is 58 chars (0-57)
+                      const isGreen = index >= 58 && index < 73;
+                      return (
+                        <motion.span key={index} variants={letter} className={isGreen ? "text-green-600" : ""}>
+                          {char}
+                        </motion.span>
+                      );
+                    })}
+                    <motion.span
+                      animate={{ opacity: [1, 0] }}
+                      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                      className="inline-block w-[3px] md:w-[6px] h-[0.9em] bg-green-600 ml-1 translate-y-[0.1em]"
+                    />
+                  </motion.h1>
+
+                  <p className="text-gray-500 text-lg md:text-xl leading-relaxed max-w-2xl">
+                    We deliver evidence-based solutions that drive impact and scale across Africa's development landscape through project management, capacity building, value chain development, research, and advisory services.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                    <motion.button 
+                      onClick={() => router.push('/about')}
+                      className="group relative bg-green-600 text-white px-10 py-5 rounded-2xl font-bold transition-all overflow-hidden flex items-center justify-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="absolute inset-0 bg-green-700 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                      <span className="relative">Discover More</span>
+                      <ChevronRight size={20} className="relative group-hover:translate-x-1 transition-transform" />
+                    </motion.button>
+                  </div>
+                </motion.div>
+                
+                {/* Subtle Agriculture Easter Egg: Growing Line */}
+                <div className="absolute -left-8 top-1/2 -translate-y-1/2 w-px h-64 bg-gradient-to-b from-transparent via-green-200 to-transparent hidden md:block">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-green-600 blur-[2px]"></div>
+                </div>
+              </div>
+
+              {/* Right Column: Professional Image Frame */}
+              <div className="lg:col-span-5 relative">
+                <motion.div 
+                  className="relative group flex justify-center lg:justify-end"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {/* Modern Asymmetrical Frames (No Labels) - Fixed Dimensions */}
+                  <div className="relative z-10 w-full max-w-[450px] aspect-[4/5] sm:h-[500px] lg:h-[650px] lg:w-[500px] overflow-hidden rounded-[3rem] border-[12px] border-white shadow-2xl">
+                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-300">
+                      {/* Image will be placed here by user */}
+                      <Image 
+                        src="/hero-main.jpg" 
+                        alt="Ikore Sustainable Development"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        fill
+                        priority
+                      />
+                    </div>
+                  </div>
+
+                </motion.div>
+              </div>
+
+            </div>
+
+            {/* Bottom Section Detail: "Soil" Transition */}
+            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-100 to-transparent"></div>
           </section>
 
       {/* Impact Numbers Section */}
-      <section className="bg-gray-50 py-20">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
+      <section className="relative py-24 bg-white overflow-hidden">
+        {/* Subtle detail: Vertical irrigation/row lines (Easter Egg) */}
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
+          <svg width="100%" height="100%">
+            <pattern id="grid-dots" width="40" height="40" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1" fill="#61af50" />
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#grid-dots)" />
+          </svg>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10">
           <motion.div 
-            className="mb-12"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 items-end"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <p className="text-green-600 font-semibold text-sm tracking-wider uppercase mb-3">
-              What We've Done In The Livestock Sector
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-              Our Impact in Numbers
-            </h2>
-            <p className="text-gray-700 text-lg max-w-2xl">
-              Our work empowers people, strengthens enterprises, and delivers solutions that scale
-            </p>
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-px bg-green-600"></div>
+                <p className="text-green-600 font-bold text-xs tracking-[0.2em] uppercase">
+                  What We've Done In The Livestock Sector
+                </p>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                Our Impact in Numbers
+              </h2>
+            </div>
+            <div className="lg:col-span-5">
+              <p className="text-gray-500 text-lg leading-relaxed border-l-2 border-green-100 pl-6">
+                Our work empowers people, strengthens enterprises, and delivers solutions that scale
+              </p>
+            </div>
           </motion.div>
 
-          {/* Bento-style Impact Grid */}
+          {/* Bento-style Impact Grid - Professional Re-layout */}
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-4 md:gap-6"
+            className="grid grid-cols-1 md:grid-cols-12 gap-6"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
           >
-            {/* Large Feature Stat - Top Left */}
+            {/* Primary Stat Card */}
             <motion.div 
-              className="md:col-span-3 lg:col-span-4 bg-green-600 p-8 rounded-2xl text-white relative overflow-hidden group"
+              className="md:col-span-8 lg:col-span-5 bg-[#0a0a0a] p-8 sm:p-10 rounded-[2.5rem] text-white relative overflow-hidden group shadow-2xl"
               variants={staggerItem}
-              whileHover={{ y: -5 }}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-green-600/10 rounded-full blur-[80px] -translate-y-24 translate-x-24"></div>
               <div className="relative z-10">
-                <div className="text-5xl md:text-6xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
+                <div className="flex items-center gap-2 text-green-500 font-bold text-xs uppercase tracking-widest mb-6">
+                  <Sprout size={14} />
+                  Vaccination Programs
+                </div>
+                <div className="text-5xl sm:text-7xl font-bold mb-4 tracking-tighter" style={{ fontFamily: 'var(--font-heading)' }}>
                   1.85M
                 </div>
-                <p className="text-green-50 text-lg">
+                <p className="text-gray-400 text-lg max-w-[200px] leading-snug">
                   Birds & Small Ruminants Vaccinated
                 </p>
               </div>
             </motion.div>
 
-            {/* Medium Stat - Top Center */}
-            <motion.div 
-              className="md:col-span-3 lg:col-span-4 bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-green-600 mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                270K
-              </div>
-              <p className="text-gray-700 text-base">
-                Households Reached with Training
-              </p>
-            </motion.div>
+            <div className="md:col-span-4 lg:col-span-3 grid grid-cols-1 gap-6">
+              <motion.div 
+                className="bg-gray-50 p-6 sm:p-8 rounded-[2rem] border border-gray-100 group hover:border-green-200 transition-all shadow-sm"
+                variants={staggerItem}
+              >
+                <div className="text-4xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-heading)' }}>270K</div>
+                <p className="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wider">Households Trained</p>
+              </motion.div>
+              <motion.div 
+                className="bg-gray-50 p-6 sm:p-8 rounded-[2rem] border border-gray-100 group hover:border-green-200 transition-all shadow-sm"
+                variants={staggerItem}
+              >
+                <div className="text-4xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'var(--font-heading)' }}>560K+</div>
+                <p className="text-gray-500 text-xs sm:text-sm font-medium uppercase tracking-wider">Farmers Reached</p>
+              </motion.div>
+            </div>
 
-            {/* Medium Stat - Top Right */}
-            <motion.div 
-              className="md:col-span-3 lg:col-span-4 bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-green-600 mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                560K+
-              </div>
-              <p className="text-gray-700 text-base">
-                Farmers Reached
-              </p>
-            </motion.div>
-
-            {/* Small Stat - Bottom Left */}
-            <motion.div 
-              className="md:col-span-2 lg:col-span-3 bg-gray-50 p-6 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="text-3xl md:text-4xl font-bold text-green-600 mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                288
-              </div>
-              <p className="text-gray-700 text-sm">
-                Animal Health Actors Trained
-              </p>
-            </motion.div>
-
-            {/* Small Stat - Bottom Center */}
-            <motion.div 
-              className="md:col-span-2 lg:col-span-3 bg-gray-50 p-6 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="text-3xl md:text-4xl font-bold text-green-600 mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                279
-              </div>
-              <p className="text-gray-700 text-sm">
-                MSMEs Reached with Capacity Building
-              </p>
-            </motion.div>
-
-            {/* Wide Feature Stat - Bottom Right */}
-            <motion.div 
-              className="md:col-span-3 lg:col-span-6 bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="text-4xl md:text-5xl font-bold text-green-600 mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                151K+
-              </div>
-              <p className="text-gray-700 text-base">
-                Jobs Created
-              </p>
-            </motion.div>
+            <div className="md:col-span-12 lg:col-span-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+               <motion.div 
+                className="bg-green-50/50 p-6 sm:p-8 rounded-[2rem] border border-green-100 flex flex-col justify-between"
+                variants={staggerItem}
+              >
+                <p className="text-gray-600 text-sm font-medium leading-relaxed mb-4">Empowering MSMEs through strategic capacity building initiatives.</p>
+                <div className="text-4xl sm:text-5xl font-bold text-green-700" style={{ fontFamily: 'var(--font-heading)' }}>279</div>
+              </motion.div>
+              <motion.div 
+                className="bg-white p-6 sm:p-8 rounded-[2rem] border border-gray-100 shadow-xl flex flex-col justify-between group hover:border-green-100 transition-all"
+                variants={staggerItem}
+              >
+                <p className="text-gray-600 text-[10px] sm:text-xs font-medium uppercase tracking-widest mb-4">Jobs Created</p>
+                <div className="text-5xl sm:text-6xl font-bold text-gray-900 tracking-tighter" style={{ fontFamily: 'var(--font-heading)' }}>151K+</div>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="bg-white py-24">
+      <section id="about" className="bg-white py-32 border-t border-gray-50">
         <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
-            <div className="bg-gray-200 rounded-lg h-96 flex items-center justify-center text-gray-500">
-              [About Image: Project Scene]
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
+            <div className="lg:col-span-6 relative">
+              <div className="relative z-10 rounded-[3rem] overflow-hidden w-full max-w-[450px] aspect-[4/5] sm:h-[500px] lg:h-[650px] lg:w-[500px] shadow-2xl border-[12px] border-white mx-auto lg:mx-0">
+                <Image 
+                  src="/about-scene.jpg" 
+                  alt="Project Scene"
+                  className="object-cover"
+                  fill
+                />
+              </div>
+              {/* Subtle Agriculture Easter Egg: Stylized Field Lines Overlay */}
+              <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-green-50 rounded-full -z-10 flex items-center justify-center">
+                <Leaf size={48} className="text-green-100" />
+              </div>
             </div>
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
-                Creating Resilience For Vulnerable Communities
-              </h2>
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                Ikore, meaning "harvest" in Yoruba language, is an international development and consulting firm that designs and delivers innovative, market-led solutions to drive sustainable social and enterprise development.
-              </p>
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                We see the world as a complex system of interdependencies. We work with the private, public sector and other non-state actors to address barriers to access, achieving scale, efficiency, and innovation in agribusiness and other sectors.
-              </p>
-              <a href="#" className="text-green-600 font-semibold flex items-center gap-2 hover:gap-3 transition-all">
-                Learn More
-                <ChevronRight size={20} />
-              </a>
+            <div className="lg:col-span-6">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInUp}
+              >
+                <div className="w-12 h-1.5 bg-green-600 mb-8 rounded-full"></div>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                  Creating Resilience For Vulnerable Communities
+                </h2>
+                <div className="space-y-6 text-gray-500 text-lg leading-relaxed">
+                  <p>
+                    Ikore, meaning <span className="text-green-600 font-bold italic">"harvest"</span> in Yoruba language, is an international development and consulting firm that designs and delivers innovative, market-led solutions to drive sustainable social and enterprise development.
+                  </p>
+                  <p>
+                    We see the world as a complex system of interdependencies. We work with the private, public sector and other non-state actors to address barriers to access, achieving scale, efficiency, and innovation in agribusiness and other sectors.
+                  </p>
+                </div>
+                <div className="mt-12">
+                  <motion.button 
+                    onClick={() => router.push('/about')}
+                    className="inline-flex items-center gap-3 text-green-600 font-bold group"
+                    whileHover={{ x: 5 }}
+                  >
+                    Learn More 
+                    <div className="p-2 rounded-full border border-green-100 group-hover:bg-green-50 transition-colors">
+                      <ChevronRight size={18} />
+                    </div>
+                  </motion.button>
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* What We Bring - HOW Section */}
-      <section id="services" className="bg-gray-50 py-24">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
+      {/* What We Bring - Core Services Section */}
+      <section id="services" className="bg-gray-50/50 py-32 border-y border-gray-100 relative">
+        {/* Subtle grid pattern background (Easter Egg) */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+          <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0 L60 0 M0 0 L0 60" fill="none" stroke="#61af50" strokeWidth="0.5" />
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-24"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-gray-100 text-green-600 text-[10px] font-bold uppercase tracking-widest mb-6 shadow-sm">
+              <Sprout size={12} />
+              Our Core Offerings
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 max-w-2xl mx-auto leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
               What We Bring To You
             </h2>
-            <p className="text-gray-700 text-lg max-w-3xl mx-auto">
-              Ikore combines deep sector knowledge with innovative approaches to deliver solutions that create impact, scale, and sustainability for our partners and the communities we serve.
+            <p className="text-gray-500 text-xl max-w-3xl mx-auto leading-relaxed">
+              Ikore combines deep sector knowledge with innovative approaches to deliver solutions that create impact, scale, and sustainability.
             </p>
           </motion.div>
 
-          {/* Bento Grid Layout */}
+          {/* New Bento Grid for Services */}
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-4 md:gap-6"
+            className="grid grid-cols-1 md:grid-cols-12 gap-6"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
           >
-            {/* Large Feature Card - Top Left */}
-            <motion.div 
-              className="md:col-span-6 lg:col-span-8 bg-green-600 p-8 md:p-10 rounded-2xl text-white relative overflow-hidden group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-20 translate-x-20"></div>
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-16 -translate-x-16"></div>
-              <div className="relative z-10">
-                <h3 className="text-2xl md:text-3xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Project Design & Management
-                </h3>
-                <p className="text-green-50 text-lg leading-relaxed">
-                  We lead the full project cycle—from scoping and planning to implementation, monitoring, and adaptive learning—ensuring high-quality delivery for corporates and development partners.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Tall Card - Top Right */}
-            <motion.div 
-              className="md:col-span-3 lg:col-span-4 md:row-span-2 bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="h-full flex flex-col">
-                <h3 className="text-xl font-bold text-black mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Market Systems & Value Chain Development
-                </h3>
-                <p className="text-gray-700 flex-grow">
-                  We strengthen agrifood systems by addressing barriers in livestock, crop, and nutrition value chains, linking farmers to markets, and creating scalable, inclusive business models.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Wide Card - Middle Left */}
-            <motion.div 
-              className="md:col-span-3 lg:col-span-5 bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <h3 className="text-xl font-bold text-black mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                Research & Policy Advisory
-              </h3>
-              <p className="text-gray-700">
-                We provide evidence through market and social research, baseline/endline studies, and policy analysis—helping partners make data-driven decisions and influence systemic change.
-              </p>
-            </motion.div>
-
-            {/* Square Card - Middle Center */}
-            <motion.div 
-              className="md:col-span-3 lg:col-span-3 bg-gray-50 p-8 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <h3 className="text-lg font-bold text-black mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                Capacity Building & Enterprise Support
-              </h3>
-              <p className="text-gray-700 text-sm">
-                Enhancing MSMEs, cooperatives, BMOs, NGOs, and youth/women-led enterprises.
-              </p>
-            </motion.div>
-
-            {/* Wide Card - Bottom Left */}
-            <motion.div 
-              className="md:col-span-4 lg:col-span-5 bg-white p-8 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <h3 className="text-xl font-bold text-black mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                Innovation & Climate-Smart Solutions
-              </h3>
-              <p className="text-gray-700">
-                We design and deploy digital tools, regenerative agriculture models, and nature-based solutions that increase resilience, reduce emissions, and improve productivity at scale.
-              </p>
-            </motion.div>
-
-            {/* Medium Card - Bottom Right */}
-            <motion.div 
-              className="md:col-span-4 lg:col-span-3 bg-gray-50 p-8 rounded-2xl border-2 border-gray-200 hover:border-green-600 transition-all group"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <h3 className="text-lg font-bold text-black mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                Business Model Design & Advisory
-              </h3>
-              <p className="text-gray-700 text-sm">
-                Strategy advisory for enterprises, organizations, and governments focused on sustainable impact.
-              </p>
-            </motion.div>
+            {[
+              { 
+                title: "Project Management", 
+                desc: "Expertly handling complex development projects from inception to completion with focus on efficiency.",
+                icon: "01",
+                span: "md:col-span-6 lg:col-span-4",
+                bg: "bg-white"
+              },
+              { 
+                title: "Capacity Building", 
+                desc: "Strengthening human and organizational capabilities to ensure long-term sustainability.",
+                icon: "02",
+                span: "md:col-span-6 lg:col-span-4",
+                bg: "bg-[#0a0a0a] text-white"
+              },
+              { 
+                title: "Value Chain Development", 
+                desc: "Optimizing agricultural and industrial value chains to unlock market opportunities.",
+                icon: "03",
+                span: "md:col-span-6 lg:col-span-4",
+                bg: "bg-white"
+              },
+              { 
+                title: "Advisory Services", 
+                desc: "Providing strategic guidance and expert recommendations for development initiatives.",
+                icon: "04",
+                span: "md:col-span-6 lg:col-span-6",
+                bg: "bg-green-600 text-white"
+              },
+              { 
+                title: "Research & Analysis", 
+                desc: "Driving evidence-based decision making through deep market research and data analysis.",
+                icon: "05",
+                span: "md:col-span-6 lg:col-span-6",
+                bg: "bg-white"
+              }
+            ].map((service, idx) => (
+              <motion.div 
+                key={idx}
+                className={`${service.span} ${service.bg} p-8 sm:p-10 rounded-[2.5rem] border border-gray-100 flex flex-col justify-between group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500`}
+                variants={staggerItem}
+              >
+                <div>
+                  <div className={`text-4xl font-bold mb-8 opacity-20 group-hover:opacity-100 transition-opacity ${service.bg.includes('0a0a') || service.bg.includes('green') ? 'text-white' : 'text-green-600'}`}>
+                    {service.icon}
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>{service.title}</h3>
+                  <p className={`text-base sm:text-lg leading-relaxed ${service.bg === 'bg-white' ? 'text-gray-500' : 'text-white/90'}`}>
+                    {service.desc}
+                  </p>
+                </div>
+                <div className="mt-8 flex justify-end">
+                   <div className={`p-3 rounded-full border transition-colors ${service.bg === 'bg-white' ? 'border-gray-100 group-hover:bg-green-600 group-hover:text-white' : 'border-white/20 group-hover:bg-white group-hover:text-black'}`}>
+                    <ChevronRight size={20} />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </section>
 
+      {/* Featured Projects Section */}
+      <section id="projects" className="bg-white py-32 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div className="max-w-xl">
+              <div className="w-12 h-1.5 bg-green-600 mb-8 rounded-full"></div>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                Our Initiatives <span className="text-green-600">&</span> Projects
+              </h2>
+            </div>
+            <div className="flex gap-4">
+              <button onClick={prevSlide} className="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <ChevronRight size={20} className="rotate-180" />
+              </button>
+              <button onClick={nextSlide} className="w-14 h-14 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div 
+              ref={scrollRef}
+              className="flex gap-8 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-12"
+              style={{ scrollBehavior: 'smooth' }}
+            >
+              {displayProjects.map((project, idx) => (
+                <motion.div 
+                  key={project.id}
+                  className="w-[320px] sm:w-[380px] lg:w-[420px] shrink-0 group cursor-pointer snap-start"
+                  whileHover={{ y: -10 }}
+                  onClick={() => router.push(project.slug ? `/projects/${project.slug}` : '/projects')}
+                >
+                  <div className="relative h-[480px] sm:h-[550px] rounded-[3rem] overflow-hidden mb-8 shadow-xl">
+                    <div className="absolute inset-0 bg-gray-100 flex items-center justify-center text-gray-400">
+                      <Image 
+                        src={project.image || "/project-placeholder.jpg"} 
+                        alt={project.name || "Project"} 
+                        fill 
+                        className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                      />
+                    </div>
+                    {/* Floating Info Badge */}
+                    <div className="absolute top-6 right-6 p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Wind size={20} className="text-white" />
+                    </div>
+                  </div>
+                  <div className="px-4">
+                    <p className="text-green-600 font-bold text-[10px] uppercase tracking-[0.2em] mb-3">{project.category}</p>
+                    <h3 className="text-2xl font-bold text-gray-900 group-hover:text-green-600 transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>{project.name}</h3>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       {/* Impact Areas - WHAT Section */}
-      <section className="bg-white py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
+      <section className="bg-[#0a0a0a] py-32 relative overflow-hidden">
+        {/* Subtle topography lines for dark background (Easter Egg) */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <svg width="100%" height="100%" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 100 Q 250 50 500 100 T 1000 100" fill="none" stroke="#61af50" strokeWidth="1" />
+            <path d="M0 300 Q 250 250 500 300 T 1000 300" fill="none" stroke="#61af50" strokeWidth="1" />
+            <path d="M0 500 Q 250 450 500 500 T 1000 500" fill="none" stroke="#61af50" strokeWidth="1" />
+            <path d="M0 700 Q 250 650 500 700 T 1000 700" fill="none" stroke="#61af50" strokeWidth="1" />
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-24"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-green-500 text-[10px] font-bold uppercase tracking-widest mb-6 backdrop-blur-sm">
+              <Leaf size={12} />
+              Our Specializations
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 max-w-2xl mx-auto leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
               Our Impact Areas
             </h2>
-            <p className="text-gray-700 text-lg max-w-2xl mx-auto">
-              We apply our expertise to three priority areas where our interventions empower farmers, strengthen markets, and improve livelihoods across Africa.
+            <p className="text-gray-400 text-xl max-w-3xl mx-auto leading-relaxed">
+              We apply our expertise to priority areas where our interventions empower farmers, strengthen markets, and improve livelihoods across Africa.
             </p>
           </motion.div>
 
@@ -517,497 +653,279 @@ export default function LandingPage() {
             viewport={{ once: true }}
             variants={staggerContainer}
           >
-            {/* Livestock */}
-            <motion.a 
-              href="#" 
-              className="group bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-green-600 transition-colors cursor-pointer"
-              variants={staggerItem}
-              whileHover={{ scale: 1.03, borderColor: '#61af50' }}
-            >
-              <div className="bg-gray-200 h-48 flex items-center justify-center text-gray-500 group-hover:bg-gray-300 transition-colors">
-                [Livestock Image]
-              </div>
-              <div className="p-8">
-                <div className="text-3xl mb-3">🐄</div>
-                <h3 className="text-2xl font-bold text-black mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Livestock
-                </h3>
-                <p className="text-gray-700 mb-4">
-                  Strengthening rural livestock systems, improving animal health, expanding dairy, and enabling sustainable practices.
-                </p>
-                <span className="text-green-600 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Learn More
-                  <ChevronRight size={18} />
-                </span>
-              </div>
-            </motion.a>
-
-            {/* Crop */}
-            <motion.a 
-              href="#" 
-              className="group bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-green-600 transition-colors cursor-pointer"
-              variants={staggerItem}
-              whileHover={{ scale: 1.03, borderColor: '#61af50' }}
-            >
-              <div className="bg-gray-200 h-48 flex items-center justify-center text-gray-500 group-hover:bg-gray-300 transition-colors">
-                [Crop Image]
-              </div>
-              <div className="p-8">
-                <div className="text-3xl mb-3">🌱</div>
-                <h3 className="text-2xl font-bold text-black mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Crop
-                </h3>
-                <p className="text-gray-700 mb-4">
-                  Promoting regenerative agriculture, biofortified crops, and climate-smart solutions for improved productivity and resilience.
-                </p>
-                <span className="text-green-600 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Learn More
-                  <ChevronRight size={18} />
-                </span>
-              </div>
-            </motion.a>
-
-            {/* Nutrition */}
-            <motion.a 
-              href="#" 
-              className="group bg-gray-50 rounded-lg overflow-hidden border border-gray-200 hover:border-green-600 transition-colors cursor-pointer"
-              variants={staggerItem}
-              whileHover={{ scale: 1.03, borderColor: '#61af50' }}
-            >
-              <div className="bg-gray-200 h-48 flex items-center justify-center text-gray-500 group-hover:bg-gray-300 transition-colors">
-                [Nutrition Image]
-              </div>
-              <div className="p-8">
-                <div className="text-3xl mb-3">🍲</div>
-                <h3 className="text-2xl font-bold text-black mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Nutrition
-                </h3>
-                <p className="text-gray-700 mb-4">
-                  Driving food innovation, supporting MSMEs, and advancing inclusive models that improve diets and income for vulnerable households.
-                </p>
-                <span className="text-green-600 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Learn More
-                  <ChevronRight size={18} />
-                </span>
-              </div>
-            </motion.a>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className="bg-gray-50 py-16 md:py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black mb-3 sm:mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-              Our Projects
-            </h2>
-            <p className="text-base sm:text-lg text-gray-700 px-4 sm:px-0">
-              A showcase of our latest initiatives driving impact across Africa
-            </p>
-          </motion.div>
-
-          {/* Horizontal Slider */}
-          <div className="relative mb-8 sm:mb-10 md:mb-12 py-4 sm:py-8 md:py-12">
-            {/* Fade gradient on right edge - indicates more content */}
-            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none z-10 hidden sm:block"></div>
-            
-            {/* Scroll hint for mobile */}
-            <div className="flex items-center justify-end gap-2 mb-4 sm:hidden text-gray-500 text-sm">
-              <span>Swipe to see more</span>
-              <svg className="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-            
-            {/* Slider Container - CSS Scroll Snap for smooth scrolling */}
-            <div className="overflow-x-auto scrollbar-hide py-6 sm:py-8 -mx-4 px-4 md:mx-0 md:px-0">
+            {[
+              { 
+                title: "Livestock", 
+                desc: "Strengthening rural livestock systems, improving animal health, and expanding dairy.",
+                artwork: (
+                  <div className="relative w-24 h-24 mb-10 group-hover:scale-110 transition-transform duration-700 ease-[0.22,1,0.36,1]">
+                    <div className="absolute inset-0 bg-green-50 rounded-2xl rotate-3 group-hover:rotate-0 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
+                    <svg viewBox="0 0 100 100" className="relative z-10 w-full h-full text-green-600 drop-shadow-sm">
+                      <defs>
+                        <linearGradient id="livestockGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="currentColor" stopOpacity="0.2" />
+                          <stop offset="100%" stopColor="currentColor" stopOpacity="0.05" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M25 45c0-10 10-18 25-18s25 8 25 18v15c0 12-10 18-25 18s-25-6-25-18V45z" fill="url(#livestockGrad)" stroke="currentColor" strokeWidth="1.5" />
+                      <path d="M35 72c-8 0-15-5-15-12 0-3 3-6 8-6h44c5 0 8 3 8 6 0 7-7 12-15 12" fill="currentColor" fillOpacity="0.2" />
+                      <circle cx="42" cy="48" r="1.5" fill="currentColor" />
+                      <circle cx="58" cy="48" r="1.5" fill="currentColor" />
+                      <path d="M32 32c-4-4-12-2-12 8M68 32c4-4 12-2 12 8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M50 20v7M40 22l3 5M60 22l-3 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.4" />
+                    </svg>
+                  </div>
+                )
+              },
+              { 
+                title: "Crop", 
+                desc: "Promoting regenerative agriculture and climate-smart solutions for improved productivity.",
+                artwork: (
+                  <div className="relative w-24 h-24 mb-10 group-hover:scale-110 transition-transform duration-700 ease-[0.22,1,0.36,1]">
+                    <div className="absolute inset-0 bg-green-50 rounded-2xl -rotate-3 group-hover:rotate-0 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
+                    <svg viewBox="0 0 100 100" className="relative z-10 w-full h-full text-green-600 drop-shadow-sm">
+                      <defs>
+                        <linearGradient id="cropGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="currentColor" stopOpacity="0.1" />
+                          <stop offset="100%" stopColor="currentColor" stopOpacity="0.3" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M50 85V40" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="2 4" strokeOpacity="0.3" />
+                      <path d="M50 40C68 22 88 22 88 50S68 78 50 55" fill="url(#cropGrad)" stroke="currentColor" strokeWidth="1.5" />
+                      <path d="M50 40C32 22 12 22 12 50s20 28 38 15" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.5" />
+                      <path d="M50 65c18-6 28-18 28-30" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeOpacity="0.4" />
+                      <circle cx="50" cy="85" r="3" fill="currentColor" fillOpacity="0.2" />
+                    </svg>
+                  </div>
+                )
+              },
+              { 
+                title: "Nutrition", 
+                desc: "Driving food innovation and inclusive models that improve diets and incomes.",
+                artwork: (
+                  <div className="relative w-24 h-24 mb-10 group-hover:scale-110 transition-transform duration-700 ease-[0.22,1,0.36,1]">
+                    <div className="absolute inset-0 bg-green-50 rounded-2xl rotate-6 group-hover:rotate-0 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
+                    <svg viewBox="0 0 100 100" className="relative z-10 w-full h-full text-green-600 drop-shadow-sm">
+                      <circle cx="50" cy="50" r="38" fill="currentColor" fillOpacity="0.05" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+                      <circle cx="50" cy="50" r="30" fill="currentColor" fillOpacity="0.1" stroke="currentColor" strokeWidth="2" />
+                      <path d="M30 45a25 25 0 0 1 40 0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M35 55c5 8 15 12 25 8s12-15 8-25" fill="currentColor" fillOpacity="0.3" />
+                      <circle cx="68" cy="35" r="8" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1" />
+                      <path d="M40 70q10 8 20 0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                )
+              }
+            ].map((area, idx) => (
               <motion.div 
-                className="flex gap-4 md:gap-6 pb-4 pr-4 sm:pr-0"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={staggerContainer}
+                key={idx}
+                className="group relative overflow-hidden rounded-[2.5rem] sm:rounded-[3rem] bg-white p-8 sm:p-12 hover:shadow-[0_20px_50px_rgba(97,175,80,0.15)] transition-all duration-500 border border-transparent hover:border-green-600/30"
+                variants={staggerItem}
               >
-                {projects.map((project, index) => (
-                  <motion.div
-                    key={project.id}
-                    className="group flex-shrink-0 w-[90%] sm:w-[70%] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-green-600 transition-all relative"
-                    variants={staggerItem}
-                    whileHover={{ y: -8 }}
-                  >
-                    {/* Decorative corner accent */}
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity z-10"></div>
-                    
-                    <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 h-48 sm:h-56 md:h-64 flex items-center justify-center text-gray-500 group-hover:scale-105 transition-transform duration-500">
-                      {project.image}
-                      {/* Overlay gradient on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    </div>
-                    <div className="p-4 sm:p-5 md:p-6 relative">
-                      {/* Small green accent line */}
-                      <div className="absolute top-0 left-4 sm:left-5 md:left-6 w-10 sm:w-12 h-1 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-                      
-                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-black mb-2 mt-2 sm:mt-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                        {project.name}
-                      </h3>
-                      <p className="text-sm text-gray-600">{project.category}</p>
-                    </div>
-                  </motion.div>
-                ))}
+                {area.artwork}
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{area.title}</h3>
+                <p className="text-base sm:text-lg text-gray-500 leading-relaxed mb-8 sm:mb-12">{area.desc}</p>
+                <div className="flex items-center gap-3 text-green-600 font-bold group/btn cursor-pointer">
+                  <span className="text-xs sm:text-sm uppercase tracking-widest">Explore Interventions</span>
+                  <div className="w-10 h-10 rounded-full border border-green-100 flex items-center justify-center group-hover/btn:bg-green-600 group-hover/btn:text-white transition-all">
+                    <ChevronRight size={18} />
+                  </div>
+                </div>
               </motion.div>
-            </div>
-          </div>
-
-          {/* Removed navigation arrows - using native horizontal scroll */}
-
-          <motion.div 
-            className="text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <a href="/projects" className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 sm:px-8 py-3 rounded font-semibold transition-colors text-sm sm:text-base">
-              View All Projects
-              <ChevronRight size={20} />
-            </a>
+            ))}
           </motion.div>
         </div>
       </section>
 
       {/* Innovations Section */}
-      <section className="bg-white py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
+      <section className="bg-white py-32 relative overflow-hidden">
+        {/* Subtle Wind pattern (Agricultural easter egg) */}
+        <div className="absolute top-0 right-0 p-24 opacity-[0.03] text-green-600 rotate-12">
+          <Wind size={400} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
           <motion.div 
-            className="text-center mb-16"
+            className="mb-24"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-              Our Innovations
+            <div className="w-12 h-1.5 bg-green-600 mb-8 rounded-full"></div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+              Drive <span className="text-green-600">Innovation</span> Through <br />Proven Models
             </h2>
-            <p className="text-gray-700 text-lg max-w-2xl mx-auto">
-              Proven models and approaches that deliver measurable impact across communities and markets
+            <p className="text-gray-500 text-xl max-w-2xl leading-relaxed">
+              We deploy contextually relevant technology and innovative business models to solve persistent development challenges.
             </p>
           </motion.div>
 
-          {/* Staggered Zigzag Layout */}
-          <div className="space-y-12">
-            {/* Innovation 01 - Left aligned */}
-            <motion.div 
-              className="flex flex-col md:flex-row gap-8 items-start"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={slideInLeft}
-            >
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-2xl" style={{ fontFamily: 'var(--font-heading)' }}>01</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              { 
+                id: "01", 
+                title: "Investing In Impact (Triple-I)", 
+                desc: "Training rural women in profitable poultry and livestock production while promoting gender equality through sustainable business structures.",
+                link: "/innovations" 
+              },
+              { 
+                id: "02", 
+                title: "Take And Give Initiative (TAG)", 
+                desc: "Evidence-based market solutions reaching the bottom of the pyramid, lessening economic burden at the last mile and building resilient households.",
+                link: "https://tag.ikore.org" 
+              },
+              { 
+                id: "03", 
+                title: "Direct-to-Retail Model", 
+                desc: "Developing direct links between input suppliers and rural retailers to minimize inefficiencies and ensure quality production inputs at the source.",
+                link: "/innovations" 
+              },
+              { 
+                id: "04", 
+                title: "Inclusive Business Design", 
+                desc: "Creating scalable models that integrate smallholder farmers into formal markets, ensuring fair value distribution and long-term growth.",
+                link: "/innovations" 
+              }
+            ].map((innovation, idx) => (
+              <motion.div 
+                key={idx}
+                className="group p-8 sm:p-10 rounded-[2.5rem] sm:rounded-[3rem] bg-gray-50/50 border border-gray-100 hover:bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerItem}
+              >
+                <div className="flex justify-between items-start mb-8">
+                  <span className="text-3xl sm:text-4xl font-bold text-green-600/20 group-hover:text-green-600 transition-colors duration-500" style={{ fontFamily: 'var(--font-heading)' }}>
+                    {innovation.id}
+                  </span>
+                  <div className="p-3 rounded-2xl bg-white border border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ChevronRight size={20} className="text-green-600" />
+                  </div>
                 </div>
-              </div>
-              <div className="flex-grow bg-gray-50 rounded-2xl p-8 border-2 border-gray-200 hover:border-green-600 transition-all">
-                <h3 className="text-2xl font-bold text-black mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Investing In Impact (Triple-I)
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-colors" style={{ fontFamily: 'var(--font-heading)' }}>
+                  {innovation.title}
                 </h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  This initiative involves the training of rural women in profitable poultry and livestock production as well as entrepreneurial skills. We promote gender equality with improved capacity for running sustainable businesses through strong structures and access to productive resources.
+                <p className="text-gray-500 text-base sm:text-lg leading-relaxed mb-8">
+                  {innovation.desc}
                 </p>
-                <a href="/innovations" className="text-green-600 font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all">
-                  Read More
-                  <ChevronRight size={18} />
+                <a 
+                  href={innovation.link} 
+                  target={innovation.link.startsWith('http') ? "_blank" : "_self"}
+                  className="text-xs sm:text-sm font-bold uppercase tracking-widest text-gray-400 group-hover:text-green-600 transition-colors"
+                >
+                  View Solution Details
                 </a>
-              </div>
-            </motion.div>
-
-            {/* Innovation 02 - Right aligned */}
-            <motion.div 
-              className="flex flex-col md:flex-row-reverse gap-8 items-start"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={slideInRight}
-            >
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-2xl" style={{ fontFamily: 'var(--font-heading)' }}>02</span>
-                </div>
-              </div>
-              <div className="flex-grow bg-gray-50 rounded-2xl p-8 border-2 border-gray-200 hover:border-green-600 transition-all">
-                <h3 className="text-2xl font-bold text-black mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Take And Give Initiative (TAG)
-                </h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  We design evidence-based market solutions aimed at reaching the bottom of the pyramid. This approach lessens economic burden at the last mile, providing improved livelihood and building resilient households.
-                </p>
-                <a href="/innovations" className="text-green-600 font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all">
-                  Read More
-                  <ChevronRight size={18} />
-                </a>
-              </div>
-            </motion.div>
-
-            {/* Innovation 03 - Left aligned */}
-            <motion.div 
-              className="flex flex-col md:flex-row gap-8 items-start"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={slideInLeft}
-            >
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-2xl" style={{ fontFamily: 'var(--font-heading)' }}>03</span>
-                </div>
-              </div>
-              <div className="flex-grow bg-gray-50 rounded-2xl p-8 border-2 border-gray-200 hover:border-green-600 transition-all">
-                <h3 className="text-2xl font-bold text-black mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Direct-to-Retail Model for Inputs
-                </h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  We work directly with input suppliers to get desired production inputs to rural communities by developing new retail points or expanding existing agro-vet retailers. This minimizes inefficiency from multiple intermediaries.
-                </p>
-                <a href="/innovations" className="text-green-600 font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all">
-                  Read More
-                  <ChevronRight size={18} />
-                </a>
-              </div>
-            </motion.div>
-
-            {/* Innovation 04 - Right aligned */}
-            <motion.div 
-              className="flex flex-col md:flex-row-reverse gap-8 items-start"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={slideInRight}
-            >
-              <div className="flex-shrink-0">
-                <div className="w-16 h-16 bg-green-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-2xl" style={{ fontFamily: 'var(--font-heading)' }}>04</span>
-                </div>
-              </div>
-              <div className="flex-grow bg-gray-50 rounded-2xl p-8 border-2 border-gray-200 hover:border-green-600 transition-all">
-                <h3 className="text-2xl font-bold text-black mb-3" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Bottom of the Pyramid Model (BOP)
-                </h3>
-                <p className="text-gray-700 leading-relaxed mb-4">
-                  Our market solutions address the needs of economically disadvantaged populations with scalable, inclusive models that reduce costs at the last mile while improving livelihoods and building household resilience.
-                </p>
-                <a href="/innovations" className="text-green-600 font-semibold inline-flex items-center gap-2 hover:gap-3 transition-all">
-                  Read More
-                  <ChevronRight size={18} />
-                </a>
-              </div>
-            </motion.div>
+              </motion.div>
+            ))}
           </div>
 
-          {/* View More Button */}
           <motion.div 
-            className="text-center mt-16"
+            className="mt-20 text-center"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <a href="/innovations" className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded font-semibold transition-colors">
-              View All Innovations
-              <ChevronRight size={20} />
-            </a>
+            <button 
+              onClick={() => router.push('/innovations')}
+              className="px-12 py-5 bg-[#0a0a0a] text-white rounded-2xl font-bold hover:bg-green-600 transition-colors shadow-xl"
+            >
+              Explore All Innovations
+            </button>
           </motion.div>
         </div>
       </section>
 
-
-
       {/* Testimonials Section */}
-      <section className="bg-gray-50 py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-              Testimonials
-            </h2>
-            <p className="text-gray-700 text-lg">
-              What our satisfied clients say about working with Ikore
-            </p>
-          </motion.div>
+      <section className="bg-[#0a0a0a] py-32 relative overflow-hidden">
+        {/* Subtle pattern background for dark section */}
+        <div className="absolute inset-0 opacity-[0.02]">
+           <svg width="100%" height="100%">
+            <pattern id="plow-light" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M0 20 L40 20" fill="none" stroke="white" strokeWidth="0.5" />
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#plow-light)" />
+          </svg>
+        </div>
 
-          {/* Masonry-style stacked cards */}
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            {/* Testimonial 1 - Tall */}
-            <motion.div 
-              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-green-600 transition-all relative"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute top-6 left-6 text-green-600 opacity-20">
-                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-              </div>
-              <p className="text-gray-700 leading-relaxed mb-6 text-lg relative z-10">
-                "Ikore emerged the best from a highly competitive process. For all the completed tasks, Ikore has met expectations and delivered quality outputs in research methodology, secondary data collection, and tool design."
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
+            <div className="lg:col-span-5">
+              <div className="text-green-500 font-bold text-xs uppercase tracking-[0.3em] mb-6">Testimonials</div>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                Global Partnerships, <br />Local Results
+              </h2>
+              <p className="text-gray-400 text-xl leading-relaxed">
+                Our collaborative approach has earned the trust of international organizations and private sector leaders.
               </p>
-              <div className="border-t-2 border-green-600 pt-4">
-                <p className="font-bold text-black" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Sa'I'Anwara'I'Jumai Consultaire Limited
-                </p>
-                <p className="text-sm text-gray-600">SCL</p>
+            </div>
+            
+            <div className="lg:col-span-7">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  {
+                    quote: "Ikore emerged the best from a highly competitive process. They have met expectations and delivered quality outputs in research methodology.",
+                    author: "SCL Limited",
+                    role: "Consultaire Limited"
+                  },
+                  {
+                    quote: "One of Ikore's remarkable achievements was establishing 10 rural outlets and training 50 CAHWs, enhancing last-mile delivery.",
+                    author: "CIRAD",
+                    role: "Agricultural Research"
+                  }
+                ].map((t, i) => (
+                  <motion.div 
+                    key={i}
+                    className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-sm"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.2 }}
+                  >
+                    <div className="text-green-500 mb-6 font-serif text-5xl">"</div>
+                    <p className="text-white text-lg leading-relaxed mb-8 italic">{t.quote}</p>
+                    <div>
+                      <div className="text-white font-bold" style={{ fontFamily: 'var(--font-heading)' }}>{t.author}</div>
+                      <div className="text-gray-500 text-sm uppercase tracking-widest">{t.role}</div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-            </motion.div>
-
-            {/* Testimonial 2 - Short */}
-            <motion.div 
-              className="bg-green-600 rounded-2xl p-8 text-white relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-              <div className="absolute top-6 left-6 text-white opacity-20">
-                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-              </div>
-              <p className="text-green-50 leading-relaxed mb-6 text-lg relative z-10">
-                "Ikore proved to be very efficient and creative in advocacy work and communications. Their high-quality materials and diverse dissemination channels ensured effective stakeholder engagement and community education."
-              </p>
-              <div className="border-t-2 border-white/30 pt-4">
-                <p className="font-bold text-white" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Global Alliance for Improved Nutrition
-                </p>
-                <p className="text-sm text-green-100">GAIN</p>
-              </div>
-            </motion.div>
-
-            {/* Testimonial 3 - Medium */}
-            <motion.div 
-              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-green-600 transition-all relative md:col-span-2 lg:col-span-1"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute top-6 left-6 text-green-600 opacity-20">
-                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-              </div>
-              <p className="text-gray-700 leading-relaxed mb-6 text-lg relative z-10">
-                "One of Ikore's remarkable achievements was establishing 10 rural-based retail outlets and training 50 Community Animal Health Workers. This significantly enhanced last-mile delivery of veterinary inputs while curbing counterfeit products."
-              </p>
-              <div className="border-t-2 border-green-600 pt-4">
-                <p className="font-bold text-black" style={{ fontFamily: 'var(--font-heading)' }}>
-                  CIRAD
-                </p>
-                <p className="text-sm text-gray-600">French Agricultural Research Centre</p>
-              </div>
-            </motion.div>
-
-            {/* Testimonial 4 - Medium */}
-            <motion.div 
-              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-green-600 transition-all relative"
-              variants={staggerItem}
-              whileHover={{ y: -5 }}
-            >
-              <div className="absolute top-6 left-6 text-green-600 opacity-20">
-                <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-              </div>
-              <p className="text-gray-700 leading-relaxed mb-6 text-lg relative z-10">
-                "Ikore conducted comprehensive surveys on women-led businesses with excellence in research design, execution, and analysis. We highly recommend them for research, impact assessment, and analysis activities."
-              </p>
-              <div className="border-t-2 border-green-600 pt-4">
-                <p className="font-bold text-black" style={{ fontFamily: 'var(--font-heading)' }}>
-                  ChananHill Enterprise
-                </p>
-              </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Partners Section */}
-      <section className="bg-white py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-              Our Trusted Partners
-            </h2>
-            <p className="text-gray-700 text-lg">
-              Working together with leading organizations to drive sustainable development
-            </p>
-          </motion.div>
-
-          {/* 3 Partners - Centered with larger display */}
-          <motion.div 
-            className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            <motion.div 
-              className="bg-white rounded-2xl p-12 border-2 border-gray-200 hover:border-green-600 transition-all w-full md:w-64 h-48 flex items-center justify-center"
-              variants={staggerItem}
-              whileHover={{ y: -8, scale: 1.05 }}
-            >
-              <img 
-                src="/partner-01.png" 
-                alt="Partner 1" 
-                className="max-w-full max-h-full object-contain"
-              />
-            </motion.div>
-
-            <motion.div 
-              className="bg-white rounded-2xl p-12 border-2 border-gray-200 hover:border-green-600 transition-all w-full md:w-64 h-48 flex items-center justify-center"
-              variants={staggerItem}
-              whileHover={{ y: -8, scale: 1.05 }}
-            >
-              <img 
-                src="/partner-02.png" 
-                alt="Partner 2" 
-                className="max-w-full max-h-full object-contain"
-              />
-            </motion.div>
-
-            <motion.div 
-              className="bg-white rounded-2xl p-12 border-2 border-gray-200 hover:border-green-600 transition-all w-full md:w-64 h-48 flex items-center justify-center"
-              variants={staggerItem}
-              whileHover={{ y: -8, scale: 1.05 }}
-            >
-              <img 
-                src="/partner-03.png" 
-                alt="Partner 3" 
-                className="max-w-full max-h-full object-contain"
-              />
-            </motion.div>
-          </motion.div>
+      <section className="bg-white py-24 border-b border-gray-50">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="text-center mb-12">
+            <p className="text-gray-400 text-sm font-bold uppercase tracking-[0.2em]">Our Strategic Partners & Sponsors</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center justify-center opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
+            {[
+              { src: "/partner-01.png", alt: "GAIN" },
+              { src: "/partner-02.png", alt: "GIZ" },
+              { src: "/partner-03.png", alt: "USAID" },
+              { src: "/partner-04.png", alt: "CIRAD" }, // Assuming names based on previous text
+              { src: "/partner-05.png", alt: "NIRSAL" }
+            ].map((logo, i) => (
+              <div key={i} className="flex justify-center p-4 filter hover:brightness-110 transition-all">
+                <img 
+                  src={logo.src} 
+                  alt={logo.alt} 
+                  className="h-12 md:h-16 w-auto object-contain"
+                  onError={(e) => {
+                    // Fallback to text if image fails
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement!.innerHTML = `<span class="text-xl font-bold text-gray-400">${logo.alt}</span>`;
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

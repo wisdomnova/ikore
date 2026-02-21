@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { Mail, CheckCircle2, Sprout, Leaf, Wind } from 'lucide-react';
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
@@ -18,247 +19,186 @@ export default function Newsletter() {
       setName('');
       setEmail('');
       setPhone('');
-    }, 3000);
+    }, 5000);
   };
 
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6 },
+      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
     },
   };
 
   return (
-    <section className="bg-gray-50 py-20">
-      <div className="max-w-6xl mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-20 sm:gap-24 lg:gap-12 items-start lg:items-center">
+    <section className="relative py-24 overflow-hidden bg-white">
+      {/* Background Agriculture Detail - Subtle Soil Layers (Easter Egg) */}
+      <div className="absolute bottom-0 left-0 w-full h-24 opacity-[0.03] pointer-events-none">
+        <svg width="100%" height="100%" preserveAspectRatio="none">
+          <path d="M0 20 Q 300 0, 600 20 T 1200 20 T 1800 20 V 100 H 0 Z" fill="#61af50" />
+          <path d="M0 40 Q 300 20, 600 40 T 1200 40 T 1800 40 V 100 H 0 Z" fill="#4d8a3f" opacity="0.5" />
+        </svg>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 md:px-8">
+        <motion.div 
+          className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+        >
           
-          {/* Decorative Agricultural Fruit Basket Box */}
-          <motion.div 
-            className="relative"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            {/* Outer Box - Fruit Basket Color */}
-            <div className="absolute top-4 left-4 w-full h-full bg-gradient-to-br from-amber-600 to-orange-700 rounded-3xl"></div>
-            
-            {/* Inner Box - Main Container */}
-            <div className="relative bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl p-6 sm:p-8 lg:p-12 border-2 border-orange-200 h-full min-h-[250px] sm:min-h-[350px] lg:min-h-[500px] flex items-center justify-center overflow-hidden">
+          {/* Enhanced Fruit Basket Visual */}
+          <div className="lg:col-span-5 relative group">
+            {/* Professional Card Container */}
+            <div className="relative h-full min-h-[350px] md:min-h-[400px] bg-gradient-to-br from-orange-50/50 to-amber-50/30 rounded-[2rem] border border-orange-100 overflow-hidden shadow-[0_20px_50px_-20px_rgba(251,146,60,0.1)]">
               
-              {/* Dot Pattern Background */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="grid grid-cols-6 sm:grid-cols-8 gap-2 sm:gap-4 p-4 sm:p-8">
-                  {[...Array(64)].map((_, i) => (
-                    <div key={i} className="w-2 h-2 rounded-full bg-orange-800"></div>
-                  ))}
-                </div>
+              {/* Agricultural Motif: Woven Basket Texture (Subtle Overlay) */}
+              <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+                <svg width="100%" height="100%">
+                  <pattern id="weave" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M0 20 L40 20 M20 0 L20 40" stroke="#f97316" strokeWidth="0.5" />
+                  </pattern>
+                  <rect width="100%" height="100%" fill="url(#weave)" />
+                </svg>
               </div>
 
-              {/* Static Fruit & Vegetable Shapes */}
-              <div className="relative w-full h-full flex items-center justify-center" style={{transform: 'scale(0.35) sm:scale(0.55) lg:scale(1)'}}>
-                
-                {/* Banana - Curved yellow shape (top left) */}
-                <div className="absolute top-16 left-16">
-                  <svg width="80" height="60" viewBox="0 0 80 60" className="fill-yellow-400">
-                    <path d="M10,30 Q20,10 40,15 Q60,20 70,30 Q60,40 40,35 Q20,30 10,30 Z" />
+              {/* Floating Decorative Elements */}
+              <div className="absolute top-8 left-8 text-orange-200 group-hover:text-orange-300 transition-colors">
+                <Leaf size={24} className="rotate-[-15deg]" />
+              </div>
+              <div className="absolute bottom-12 right-12 text-green-200 group-hover:text-green-300 transition-colors">
+                <Sprout size={32} className="rotate-[10deg]" />
+              </div>
+
+              {/* The "Fruit Basket" - Enhanced SVG Illustration */}
+              <div className="relative w-full h-full flex items-center justify-center p-8 md:p-12">
+                <div className="relative w-full aspect-square max-w-[240px] md:max-w-[300px]">
+                  {/* Decorative Glow */}
+                  <div className="absolute inset-0 bg-orange-200/20 blur-[80px] rounded-full"></div>
+                  
+                  {/* Fruit Basket Frame (Easter Egg: Stylized "K" for Ikore in the basket weave if looked closely) */}
+                  <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-2xl">
+                    {/* Watermelon (Back) */}
+                    <circle cx="140" cy="70" r="35" fill="#166534" />
+                    <circle cx="140" cy="70" r="30" fill="#15803d" />
+                    <path d="M125 45 Q140 35 155 45" fill="none" stroke="#166534" strokeWidth="2" opacity="0.3" />
+                    
+                    {/* Coconut (Back) */}
+                    <circle cx="65" cy="85" r="30" fill="#78350f" />
+                    <path d="M50 70 Q65 60 80 70" fill="none" stroke="#451a03" strokeWidth="1" opacity="0.2" />
+
+                    {/* Banana (Center) */}
+                    <path d="M40 100 Q80 80 140 110" fill="none" stroke="#facc15" strokeWidth="18" strokeLinecap="round" />
+                    <path d="M45 102 Q80 85 135 110" fill="none" stroke="#eab308" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
+
+                    {/* Orange (Central) */}
+                    <circle cx="100" cy="115" r="35" fill="#f97316" />
+                    <circle cx="115" cy="95" r="4" fill="white" opacity="0.2" />
+                    
+                    {/* Apple (Front Left) */}
+                    <circle cx="65" cy="135" r="28" fill="#ef4444" />
+                    <path d="M65 107 V115" stroke="#451a03" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M65 110 Q75 100 80 110" fill="#15803d" />
+
+                    {/* Mango (Front Right) */}
+                    <ellipse cx="130" cy="140" rx="30" ry="25" fill="#f59e0b" transform="rotate(-15 130 140)" />
+                    
+                    {/* Small Berries/Detail (Front) */}
+                    <circle cx="100" cy="155" r="12" fill="#8b5cf6" opacity="0.8" />
+                    <circle cx="115" cy="158" r="10" fill="#8b5cf6" />
                   </svg>
                 </div>
+              </div>
 
-                {/* Watermelon - Green circle with dark green stripes (top right) */}
-                <div className="absolute top-20 right-20 w-24 h-24 rounded-full bg-green-600 flex items-center justify-center">
-                  <div className="absolute inset-0 rounded-full overflow-hidden">
-                    <div className="absolute top-0 left-3 w-2 h-full bg-green-800 opacity-60"></div>
-                    <div className="absolute top-0 left-9 w-3 h-full bg-green-800 opacity-60"></div>
-                    <div className="absolute top-0 right-9 w-3 h-full bg-green-800 opacity-60"></div>
-                    <div className="absolute top-0 right-3 w-2 h-full bg-green-800 opacity-60"></div>
-                  </div>
-                </div>
-
-                {/* Orange - Orange circle with texture (center) */}
-                <div className="absolute w-28 h-28 rounded-full bg-orange-500 flex items-center justify-center shadow-lg">
-                  <div className="absolute inset-0 rounded-full">
-                    <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-orange-600 opacity-50"></div>
-                    <div className="absolute bottom-3 left-3 w-2 h-2 rounded-full bg-orange-600 opacity-50"></div>
-                    <div className="absolute top-1/2 left-2 w-2 h-2 rounded-full bg-orange-600 opacity-50"></div>
-                  </div>
-                </div>
-
-                {/* Coconut - Brown circle (bottom left) */}
-                <div className="absolute bottom-20 left-24 w-20 h-20 rounded-full bg-amber-800 shadow-md">
-                  <div className="absolute inset-0 rounded-full">
-                    <div className="absolute top-2 left-2 w-1 h-16 bg-amber-950 opacity-40 rotate-12"></div>
-                    <div className="absolute top-2 left-5 w-1 h-16 bg-amber-950 opacity-40 rotate-12"></div>
-                    <div className="absolute top-2 right-5 w-1 h-16 bg-amber-950 opacity-40 rotate-12"></div>
-                  </div>
-                </div>
-
-                {/* Apple - Red rounded shape with leaf (bottom right) */}
-                <div className="absolute bottom-16 right-16">
-                  <div className="relative">
-                    <div className="w-24 h-24 rounded-full bg-red-500 shadow-md"></div>
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full bg-red-500"></div>
-                    {/* Leaf */}
-                    <div className="absolute -top-2 right-8 w-6 h-10 bg-green-600 rounded-full rotate-45"></div>
-                    {/* Stem */}
-                    <div className="absolute -top-3 right-10 w-1 h-4 bg-amber-900"></div>
-                  </div>
-                </div>
-
-                {/* Papaya/Pawpaw - Orange oval (middle left) */}
-                <div className="absolute left-20 top-1/2 transform -translate-y-1/2">
-                  <div className="w-16 h-24 rounded-full bg-orange-400 shadow-md">
-                    <div className="absolute inset-0 rounded-full">
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-orange-500 opacity-60"></div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Lime - Small lime green circle (top center) */}
-                <div className="absolute top-12 left-1/2 transform -translate-x-1/2 w-14 h-14 rounded-full bg-lime-500 shadow-md"></div>
-
-                {/* Mango - Yellow-orange oval (middle right) */}
-                <div className="absolute right-20 top-1/2 transform -translate-y-1/2">
-                  <div className="w-20 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 shadow-md rotate-12"></div>
-                </div>
-
-                {/* Tomato - Red circle with green top (bottom center) */}
-                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
-                  <div className="relative">
-                    <div className="w-16 h-16 rounded-full bg-red-600 shadow-md"></div>
-                    {/* Tomato top */}
-                    <div className="absolute -top-1 left-1/2 transform -translate-x-1/2">
-                      <div className="w-8 h-2 bg-green-700 rounded-t-lg"></div>
-                      <div className="w-1 h-3 bg-green-800 mx-auto"></div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Carrot - Orange triangle (bottom right corner) */}
-                <div className="absolute bottom-8 right-8">
-                  <div className="relative">
-                    <div className="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[40px] border-t-orange-600 rotate-180"></div>
-                    {/* Carrot top leaves */}
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 flex gap-1">
-                      <div className="w-1 h-4 bg-green-600 rotate-12"></div>
-                      <div className="w-1 h-5 bg-green-600"></div>
-                      <div className="w-1 h-4 bg-green-600 -rotate-12"></div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Corn - Yellow with kernels (left center) */}
-                <div className="absolute left-8 top-1/3">
-                  <div className="relative w-12 h-24 bg-yellow-300 rounded-full shadow-md">
-                    {/* Kernel pattern */}
-                    <div className="absolute inset-1 grid grid-cols-3 gap-1 p-1">
-                      {[...Array(9)].map((_, i) => (
-                        <div key={i} className="w-2 h-2 rounded-sm bg-yellow-500 opacity-60"></div>
-                      ))}
-                    </div>
-                    {/* Corn husk */}
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-10 h-6 bg-green-200 rounded-t-full opacity-80"></div>
-                  </div>
-                </div>
-
-                {/* Eggplant - Purple oval (right bottom) */}
-                <div className="absolute right-32 bottom-28">
-                  <div className="relative">
-                    <div className="w-14 h-20 rounded-full bg-purple-700 shadow-md"></div>
-                    {/* Eggplant top */}
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-6 h-3 bg-green-700 rounded-t-md"></div>
-                  </div>
-                </div>
-
-                {/* Bell Pepper - Green/Red pepper (top center right) */}
-                <div className="absolute top-8 right-1/3">
-                  <div className="relative">
-                    <div className="w-16 h-20 bg-red-500 rounded-b-3xl shadow-md"></div>
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-12 h-16 bg-red-500 rounded-t-3xl"></div>
-                    {/* Pepper stem */}
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-4 bg-green-700 rounded-t-md"></div>
-                  </div>
-                </div>
-
-                {/* Pumpkin - Orange rounded with grooves (left bottom) */}
-                <div className="absolute left-12 bottom-32">
-                  <div className="relative w-20 h-16 bg-orange-600 rounded-full shadow-md">
-                    {/* Pumpkin grooves */}
-                    <div className="absolute inset-0 rounded-full overflow-hidden">
-                      <div className="absolute top-0 left-4 w-1 h-full bg-orange-800 opacity-40"></div>
-                      <div className="absolute top-0 left-8 w-1 h-full bg-orange-800 opacity-40"></div>
-                      <div className="absolute top-0 right-8 w-1 h-full bg-orange-800 opacity-40"></div>
-                      <div className="absolute top-0 right-4 w-1 h-full bg-orange-800 opacity-40"></div>
-                    </div>
-                    {/* Pumpkin stem */}
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-2 h-3 bg-green-800"></div>
-                  </div>
-                </div>
-
+              {/* Tag (Easter Egg: "Fresh Impact") */}
+              <div className="absolute top-1/2 left-0 -translate-y-1/2 -rotate-90 origin-left ml-6 text-[10px] uppercase tracking-[0.3em] font-bold text-orange-300/40 select-none">
+                Cultivating Sustainable Impact
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Newsletter Form */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="lg:mt-0"
-          >
-            <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
+          {/* Newsletter Form Content */}
+          <div className="lg:col-span-7 flex flex-col justify-center py-4">
+            <div className="mb-10 lg:pl-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-100 text-green-600 text-[10px] font-bold uppercase tracking-wider mb-6">
+                <Wind size={12} />
+                Newsletter
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-[1.1]" style={{ fontFamily: 'var(--font-heading)' }}>
                 Stay Updated with Our Work
               </h2>
-              <p className="text-gray-700 text-lg">
+              <p className="text-gray-500 text-lg leading-relaxed max-w-xl">
                 Subscribe to our newsletter to receive updates on our latest projects, insights, and impact stories.
               </p>
             </div>
 
-            <form onSubmit={handleNewsletterSubmit} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Your Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="w-full px-6 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-600 transition-colors"
-              />
-              <input
-                type="email"
-                placeholder="Your Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-6 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-600 transition-colors"
-              />
-              <input
-                type="tel"
-                placeholder="Phone Number (Optional)"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-6 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-600 transition-colors"
-              />
-              <button
-                type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-semibold transition-colors text-lg"
-              >
-                Subscribe
-              </button>
+            <form onSubmit={handleNewsletterSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:pl-4">
+              <div className="md:col-span-2">
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2 ml-1">Full Name</label>
+                <input
+                  type="text"
+                  placeholder="e.g. John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition-all text-gray-900 placeholder:text-gray-300"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2 ml-1">Email Address</label>
+                <input
+                  type="email"
+                  placeholder="name@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition-all text-gray-900 placeholder:text-gray-300"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2 ml-1">Phone Number (Optional)</label>
+                <input
+                  type="tel"
+                  placeholder="+234..."
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full px-6 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition-all text-gray-900 placeholder:text-gray-300"
+                />
+              </div>
+              <div className="md:col-span-2 mt-4">
+                <button
+                  type="submit"
+                  disabled={submitted}
+                  className="relative w-full group overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-green-700 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                  <div className="relative w-full bg-green-600 text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all">
+                    {submitted ? 'Subscription Active' : 'Subscribe to Newsletter'}
+                    {!submitted && <Mail size={18} className="group-hover:translate-x-1 transition-transform" />}
+                  </div>
+                </button>
+              </div>
             </form>
 
-            {submitted && (
-              <p className="mt-4 text-center text-green-600 font-semibold">
-                Thank you for subscribing!
-              </p>
-            )}
-          </motion.div>
+            <AnimatePresence>
+              {submitted && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="mt-6 flex items-center gap-3 text-green-600 font-bold justify-center lg:justify-start lg:pl-5"
+                >
+                  <CheckCircle2 size={20} />
+                  <span>Success! You've joined the Ikore network.</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-        </div>
+        </motion.div>
       </div>
     </section>
   );

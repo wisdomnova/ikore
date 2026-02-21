@@ -1,8 +1,7 @@
 'use client';
 
-import { ChevronRight } from 'lucide-react';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { ChevronRight, Leaf, Sprout, Wind, Wheat, CheckCircle, Users, Target, BarChart3, Search, Database, Globe } from 'lucide-react';
+import { motion, Variants } from 'framer-motion';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -10,390 +9,410 @@ import Newsletter from '@/components/Newsletter';
 
 export default function AboutPage() {
   // Animation variants
-  const fadeInUp = {
+  const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
   };
 
-  const fadeInDown = {
-    hidden: { opacity: 0, y: -30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-  };
-
-  const slideInRight = {
-    hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } }
-  };
-
-  const slideInLeft = {
-    hidden: { opacity: 0, x: -50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } }
-  };
-
-  const staggerContainer = {
+  const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2,
+        delayChildren: 0.1,
       },
     },
   };
 
-  const staggerItem = {
+  const staggerItem: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5 },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-x-hidden">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative bg-white overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-24 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Hero Text */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeInUp}
-          >
-            <motion.h1 
-              className="text-4xl md:text-5xl font-bold text-black mb-6" 
-              style={{ fontFamily: 'var(--font-heading)' }}
-              variants={fadeInUp}
-            >
-              Creating Resilience For Vulnerable Communities
-            </motion.h1>
-            <motion.p 
-              className="text-lg text-gray-700 mb-8 leading-relaxed"
-              variants={fadeInUp}
-            >
-              Ikore, meaning "harvest" in Yoruba language, is an international development organization proffering innovative solutions to drive sustainable social and enterprise development.
-            </motion.p>
-            <motion.button 
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded transition-colors font-semibold flex items-center gap-2"
-              variants={fadeInUp}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Learn More
-              <ChevronRight size={20} />
-            </motion.button>
-          </motion.div>
-
-          {/* Hero Image Placeholder */}
-          <motion.div 
-            className="bg-gray-200 rounded-lg h-96 md:h-full min-h-96 flex items-center justify-center text-gray-500"
-            variants={slideInRight}
-            initial="hidden"
-            animate="visible"
-          >
-            [About Hero Image]
-          </motion.div>
+      {/* Hero Section - Asymmetrical & Premium */}
+      <section className="relative min-h-[70vh] flex items-center bg-white overflow-hidden pt-32 md:pt-40">
+        {/* Intricate Agriculture Detail: Subtle Topography/Soil Lines */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
+          <svg width="100%" height="100%" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 200 Q 250 150 500 200 T 1000 200" fill="none" stroke="#61af50" strokeWidth="1" />
+            <path d="M0 400 Q 250 350 500 400 T 1000 400" fill="none" stroke="#61af50" strokeWidth="1" />
+            <path d="M0 600 Q 250 550 500 600 T 1000 600" fill="none" stroke="#61af50" strokeWidth="1" />
+            <path d="M0 800 Q 250 750 500 800 T 1000 800" fill="none" stroke="#61af50" strokeWidth="1" />
+          </svg>
         </div>
-      </section>
 
-      {/* About Introduction Section */}
-      <section className="bg-gray-50 py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
-            <motion.div 
-              className="bg-gray-200 rounded-lg h-96 flex items-center justify-center text-gray-500"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={slideInLeft}
-            >
-              [Team/Community Image]
-            </motion.div>
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative">
+          {/* Left Column: Content */}
+          <div className="lg:col-span-7 relative z-10">
             <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={fadeInUp}
+              className="space-y-8"
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
-                Our Worldview & Approach
-              </h2>
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                Ikore's view of the world is one of a complex system with inter-dependencies. We work with the private, public sector and other non-state actors to address barriers to access, achieving scale, efficiency, and innovation in agribusiness and other sectors.
-              </p>
-              <p className="text-gray-700 mb-6 leading-relaxed">
-                Whatever we do, we always aim to create a win-win situation for all actors, extending the access frontiers at every opportunity. We work in hard-to-reach, economically deprived places and vulnerable communities across Nigeria and Africa, providing solutions that support inefficient markets and communities.
+              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-green-50 border border-green-100 text-green-700 text-[10px] font-black uppercase tracking-[0.2em]">
+                <Wheat size={14} className="text-green-600" />
+                Rooted in Excellence
+              </div>
+
+              <h1 
+                className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight" 
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                Creating Resilience For <span className="text-green-600">Vulnerable</span> Communities
+              </h1>
+
+              <p className="text-gray-500 text-lg md:text-xl leading-relaxed max-w-2xl">
+                Ikore, meaning &quot;harvest&quot; in Yoruba, is an international development organization proffering innovative solutions to drive sustainable social and enterprise development.
               </p>
             </motion.div>
           </div>
 
-          {/* Additional Details */}
-          <motion.div 
-            className="group bg-white rounded-2xl p-8 md:p-12 border-2 border-gray-200 hover:border-green-600 transition-all relative overflow-hidden"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            whileHover={{ y: -8 }}
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-            <div className="absolute top-0 left-8 w-16 h-1 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-            <h3 className="text-2xl font-bold text-black mb-6 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-              Building Resilient Communities
-            </h3>
-            <p className="text-gray-700 mb-4 leading-relaxed relative z-10">
-              In the Agricultural Sector, we facilitate inclusive market growth by deploying strategies that promote value chain competitiveness and build resilient communities, ensuring bumper harvest for rural poor farmers in those communities.
-            </p>
-            <p className="text-gray-700 leading-relaxed relative z-10">
-              Our very dynamic and innovative workforce have experience working in different value chains across Nigeria and Africa. Our people work collectively with host communities to design home-grown solutions that improve the livelihood and resilience of the communities.
-            </p>
-          </motion.div>
+          {/* Right Column: Decorative Frame */}
+          <div className="lg:col-span-5 relative">
+            <motion.div 
+              className="relative w-full max-w-[450px] aspect-[4/5] sm:h-[500px] lg:h-[650px] lg:w-[500px] overflow-hidden rounded-[3.5rem] border-[12px] border-white shadow-premium bg-gray-100 mx-auto lg:mx-0"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Image 
+                src="/hero-main.jpg" 
+                alt="Ikore Community Impact"
+                className="object-cover"
+                fill
+                priority
+              />
+            </motion.div>
+            
+            {/* Catalyst Element */}
+            <motion.div 
+              className="absolute -bottom-6 -left-6 w-24 h-24 bg-green-600 rounded-3xl shadow-xl flex items-center justify-center text-white"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Wind size={40} strokeWidth={1.5} />
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Vision & Mission Section */}
-      <section className="bg-white py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-              Our Capability Statement
-            </h2>
-            <p className="text-gray-700 text-lg max-w-2xl mx-auto">
-              Guiding our mission and vision for sustainable impact
-            </p>
-          </motion.div>
+      {/* Worldview Section - High Contrast & Spacious */}
+      <section className="bg-gray-50 pt-32 pb-48 relative overflow-hidden">
+        {/* Grain Overlay */}
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-grain"></div>
 
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
             <motion.div 
-              className="group bg-white rounded-2xl p-10 border-2 border-green-600 relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -8 }}
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-              <div className="absolute top-0 left-6 w-12 h-1 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-              <h3 className="text-2xl font-bold text-green-600 mb-4 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-                Our Vision
-              </h3>
-              <p className="text-gray-700 leading-relaxed relative z-10">
-                To contribute to a prosperous world that creates an opportunity for a better life for all.
-              </p>
-            </motion.div>
-
-            <motion.div 
-              className="group bg-white rounded-2xl p-10 border-2 border-green-600 relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -8 }}
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-              <div className="absolute top-0 left-6 w-12 h-1 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-              <h3 className="text-2xl font-bold text-green-600 mb-4 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-                Our Mission
-              </h3>
-              <p className="text-gray-700 leading-relaxed relative z-10">
-                To facilitate market inclusion for improved productivity and a bumper harvest through capacity building, business model/strategy advisory, market linkages, social enterprises and research.
-              </p>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Core Values Section */}
-      <section className="bg-gray-50 py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <motion.div 
-            className="text-center mb-16"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-              Our Core Values
-            </h2>
-            <p className="text-gray-700 text-lg max-w-2xl mx-auto">
-              The principles that guide everything we do
-            </p>
-          </motion.div>
-
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            <motion.div 
-              className="group bg-white rounded-2xl p-6 sm:p-8 border-2 border-gray-200 hover:border-green-600 transition-all relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -8 }}
-            >
-              <div className="absolute top-0 right-0 w-20 h-20 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-              <div className="absolute top-0 left-4 w-10 h-0.5 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-              <h3 className="text-xl font-bold text-green-600 mb-3 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-                Innovation
-              </h3>
-              <p className="text-gray-700 text-sm relative z-10 leading-relaxed">
-                We continue to apply new processes, introduce new techniques, and establish successful ideas to create new value.
-              </p>
-            </motion.div>
-
-            <motion.div 
-              className="group bg-white rounded-2xl p-6 sm:p-8 border-2 border-gray-200 hover:border-green-600 transition-all relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -8 }}
-            >
-              <div className="absolute top-0 right-0 w-20 h-20 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-              <div className="absolute top-0 left-4 w-10 h-0.5 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-              <h3 className="text-xl font-bold text-green-600 mb-3 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-                Collaboration
-              </h3>
-              <p className="text-gray-700 text-sm relative z-10 leading-relaxed">
-                We constantly update our systems, tools and knowledge with our partners to create an effective environment.
-              </p>
-            </motion.div>
-
-            <motion.div 
-              className="group bg-white rounded-2xl p-6 sm:p-8 border-2 border-gray-200 hover:border-green-600 transition-all relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -8 }}
-            >
-              <div className="absolute top-0 right-0 w-20 h-20 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-              <div className="absolute top-0 left-4 w-10 h-0.5 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-              <h3 className="text-xl font-bold text-green-600 mb-3 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-                Commitment
-              </h3>
-              <p className="text-gray-700 text-sm relative z-10 leading-relaxed">
-                We strive to create and support an environment where people are committed to serving our beneficiaries and clients.
-              </p>
-            </motion.div>
-
-            <motion.div 
-              className="group bg-white rounded-2xl p-6 sm:p-8 border-2 border-gray-200 hover:border-green-600 transition-all relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -8 }}
-            >
-              <div className="absolute top-0 right-0 w-20 h-20 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-              <div className="absolute top-0 left-4 w-10 h-0.5 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-              <h3 className="text-xl font-bold text-green-600 mb-3 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-                Excellence
-              </h3>
-              <p className="text-gray-700 text-sm relative z-10 leading-relaxed">
-                All our projects are executed with the highest level of care within the scope of the requirements.
-              </p>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Research Capability Section */}
-      <section className="bg-white py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
-            <motion.div
+              className="relative"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={fadeInUp}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
-                Ikore's Research Capability
-              </h2>
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                We leverage our expertise to generate valuable insights through extensive social and economic research, enabling us to design and implement evidence-based solutions.
-              </p>
-              <p className="text-gray-700 leading-relaxed">
-                Our research addresses systemic challenges in agriculture, health, and livelihoods across Nigeria and Africa. We combine rigorous methodology with community insights to create sustainable solutions.
-              </p>
+              <div className="relative z-10 w-full max-w-[500px] aspect-square rounded-[4rem] overflow-hidden shadow-premium border-[12px] border-white bg-gray-100 mx-auto lg:mx-0">
+                <Image 
+                  src="/services-2.jpg"  
+                  alt="Our Approach"
+                  className="object-cover transition-transform duration-1000 hover:scale-105"
+                  fill
+                />
+              </div>
+              <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-green-600/10 rounded-full blur-3xl -z-10"></div>
             </motion.div>
 
-            <motion.div 
-              className="bg-gray-200 rounded-lg h-96 flex items-center justify-center text-gray-500"
+            <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              variants={slideInRight}
+              variants={fadeInUp}
+              className="space-y-10"
             >
-              [Research/Data Image]
+              <div className="space-y-6">
+                <div className="w-16 h-1.5 bg-green-600 rounded-full"></div>
+                <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                  Our Worldview & <br/><span className="text-green-600 italic font-serif">Approach</span>
+                </h2>
+              </div>
+              
+              <div className="space-y-8 text-lg sm:text-xl text-gray-500 leading-relaxed font-medium">
+                <p>
+                  Ikore&apos;s view of the world is one of a complex system with inter-dependencies. We work with the private, public sector and other non-state actors to address barriers to access, achieving scale, efficiency, and innovation in agribusiness and other sectors.
+                </p>
+                <p>
+                  Whatever we do, we always aim to create a win-win situation for all actors, extending the access frontiers at every opportunity. We work in hard-to-reach, economically deprived places and vulnerable communities across Nigeria and Africa, providing solutions that support inefficient markets and communities.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
+                {[
+                  "Inclusive Market Growth",
+                  "Value Chain Competitiveness"
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 group hover:border-green-600 transition-colors">
+                    <div className="bg-green-50 p-2 rounded-lg group-hover:bg-green-600 group-hover:text-white transition-all">
+                      <CheckCircle size={20} className="text-inherit" />
+                    </div>
+                    <span className="font-bold text-gray-900 tracking-tight">{item}</span>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="bg-gray-50 py-24">
-        <div className="max-w-6xl mx-auto px-4 md:px-8">
+      {/* Capability Statement - Dark Premium Pivot */}
+      <section className="bg-[#0a0a0a] py-40 relative overflow-hidden">
+        {/* Topography Detail */}
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+          <svg width="100%" height="100%" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 100 C 150 150 350 50 500 100 S 850 150 1000 100" fill="none" stroke="white" strokeWidth="0.5" />
+            <path d="M0 300 C 150 350 350 250 500 300 S 850 350 1000 300" fill="none" stroke="white" strokeWidth="0.5" />
+          </svg>
+        </div>
+        <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="text-center mb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <h2 className="text-4xl md:text-6xl font-bold text-white leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                Capability Statement
+              </h2>
+              <div className="w-24 h-1 bg-green-600 mx-auto rounded-full"></div>
+              <p className="text-white/60 text-xl max-w-2xl mx-auto font-medium">
+                Guiding our mission and vision for sustainable impact across the African continent.
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            {[
+              {
+                title: "Our Vision",
+                icon: <Target size={32} />,
+                text: "To contribute to a prosperous world that creates an opportunity for a better life for all."
+              },
+              {
+                title: "Our Mission",
+                icon: <Sprout size={32} />,
+                text: "To facilitate market inclusion for improved productivity and a bumper harvest through capacity building, business model/strategy advisory, market linkages, social enterprises and research."
+              }
+            ].map((item, idx) => (
+              <motion.div 
+                key={idx}
+                className="bg-white/[0.03] backdrop-blur-md border border-white/10 p-8 sm:p-12 md:p-16 rounded-[4rem] hover:bg-white/[0.06] transition-all group relative overflow-hidden"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.2 }}
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-green-600/10 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-600/20 rounded-3xl flex items-center justify-center text-green-500 mb-8 sm:mb-10 group-hover:scale-110 group-hover:bg-green-600 group-hover:text-white transition-all duration-500">
+                  {item.icon}
+                </div>
+                <h3 className="text-3xl sm:text-4xl font-bold text-white mb-6 sm:mb-8" style={{ fontFamily: 'var(--font-heading)' }}>{item.title}</h3>
+                <p className="text-white/70 text-lg sm:text-xl md:text-2xl leading-relaxed font-light">
+                  {item.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Core Values Section - Spacious & Icon-Driven */}
+      <section className="bg-white py-40 relative">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-24">
+            <div className="lg:col-span-4">
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInUp}
+                className="sticky top-40 space-y-10"
+              >
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 text-green-600 font-black uppercase tracking-[0.2em] text-xs">
+                    <div className="w-10 h-px bg-green-600"></div>
+                    Philosophy
+                  </div>
+                  <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                    Our Core <span className="text-green-600">Values</span>
+                  </h2>
+                </div>
+                <p className="text-gray-500 text-lg md:text-xl leading-relaxed font-medium">
+                  The principles that guide our interactions, decision-making, and project delivery across every community we serve.
+                </p>
+              </motion.div>
+            </div>
+
+            <div className="lg:col-span-8">
+              <motion.div 
+                className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={staggerContainer}
+              >
+                {[
+                  { title: "Innovation", desc: "We apply new processes, introduce new techniques, and establish successful ideas to create new value.", icon: <Wind /> },
+                  { title: "Collaboration", desc: "We constantly update our systems, tools and knowledge with our partners to create an effective environment.", icon: <Users /> },
+                  { title: "Commitment", desc: "We strive to create and support an environment where people are committed to serving our beneficiaries.", icon: <Target /> },
+                  { title: "Excellence", desc: "All our projects are executed with the highest level of care within the scope of the requirements.", icon: <BarChart3 /> }
+                ].map((val, i) => (
+                  <motion.div 
+                    key={i}
+                    variants={staggerItem}
+                    className="p-8 sm:p-12 rounded-[2.5rem] sm:rounded-[3rem] bg-gray-50 border border-gray-100 hover:border-green-600 transition-all hover:shadow-premium group"
+                  >
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-3xl shadow-sm flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all duration-500 mb-8 sm:mb-10">
+                      {val.icon}
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6" style={{ fontFamily: 'var(--font-heading)' }}>{val.title}</h3>
+                    <p className="text-gray-500 text-base sm:text-lg leading-relaxed">{val.desc}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Research Capability Section - High Fidelity */}
+      <section className="bg-gray-50 py-40 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-grain"></div>
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInUp}
+              className="order-2 lg:order-1 space-y-10"
+            >
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-green-50 border border-green-100 text-green-700 text-[10px] font-black uppercase tracking-[0.2em]">
+                  <Search size={14} className="text-green-600" />
+                  Evidence Driven
+                </div>
+                <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                  Ikore&apos;s Research <span className="text-green-600">Capability</span>
+                </h2>
+              </div>
+              <div className="space-y-8 text-lg sm:text-xl text-gray-500 leading-relaxed font-medium">
+                <p>
+                  We leverage our expertise to generate valuable insights through extensive social and economic research, enabling us to design and implement evidence-based solutions.
+                </p>
+                <p>
+                  Our research addresses systemic challenges in agriculture, health, and livelihoods across Nigeria and Africa. We combine rigorous methodology with community insights to create sustainable solutions.
+                </p>
+              </div>
+              <div className="flex gap-8 pt-6">
+                 <div className="flex flex-col gap-2">
+                    <Database className="text-green-600" size={32} />
+                    <span className="text-sm font-black uppercase tracking-widest text-gray-400">Data Integrity</span>
+                 </div>
+                 <div className="flex flex-col gap-2">
+                    <Globe className="text-green-600" size={32} />
+                    <span className="text-sm font-black uppercase tracking-widest text-gray-400">Regional Scope</span>
+                 </div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="order-1 lg:order-2 relative" 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInUp}
+            >
+              <div className="relative z-10 rounded-[4rem] overflow-hidden aspect-[4/3] shadow-premium border-[12px] border-white bg-gray-100">
+                <Image 
+                  src="/blog-2.jpg" 
+                  alt="Research and Analysis"
+                  className="object-cover"
+                  fill
+                />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section - Large Format Cards */}
+      <section className="bg-white py-40">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
           <motion.div 
-            className="text-center mb-16"
+            className="text-center mb-20 sm:mb-24 space-y-6"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-black mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-              Why Choose Ikore
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-heading)' }}>
+              Why Choose <span className="text-green-600 font-serif italic">Ikore</span>
             </h2>
-            <p className="text-gray-700 text-lg max-w-2xl mx-auto">
+            <p className="text-xl sm:text-2xl text-gray-500 max-w-2xl mx-auto font-medium">
               What sets us apart in delivering sustainable impact
             </p>
           </motion.div>
 
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
           >
-            <motion.div 
-              className="group bg-white rounded-2xl p-10 border-2 border-gray-200 hover:border-green-600 transition-all relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -8 }}
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-              <div className="absolute top-0 left-6 w-12 h-1 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-              <h3 className="text-2xl font-bold text-green-600 mb-4 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-                Proven Strategies
-              </h3>
-              <p className="text-gray-700 leading-relaxed relative z-10">
-                We develop winning strategies for your interventions. Our work ethic is exceptional, and our tangible results speak for themselves. Communities are transformed, and poor families are empowered in sustainable ways.
-              </p>
-            </motion.div>
-
-            <motion.div 
-              className="group bg-white rounded-2xl p-10 border-2 border-gray-200 hover:border-green-600 transition-all relative overflow-hidden"
-              variants={staggerItem}
-              whileHover={{ y: -8 }}
-            >
-              <div className="absolute top-0 right-0 w-24 h-24 bg-green-600 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
-              <div className="absolute top-0 left-6 w-12 h-1 bg-green-600 transform origin-left group-hover:scale-x-150 transition-transform"></div>
-              <h3 className="text-2xl font-bold text-green-600 mb-4 relative z-10" style={{ fontFamily: 'var(--font-heading)' }}>
-                Success Rate
-              </h3>
-              <p className="text-gray-700 leading-relaxed relative z-10">
-                Our success rate speaks for itself. We achieve results because we are grounded in our core values of innovation, collaboration, commitment, and excellence. Every project is a testament to our dedication.
-              </p>
-            </motion.div>
+            {[
+              {
+                title: "Proven Strategies",
+                desc: "We develop winning strategies for your interventions. Our work ethic is exceptional, and our tangible results speak for themselves. Communities are transformed, and poor families are empowered in sustainable ways."
+              },
+              {
+                title: "Success Rate",
+                desc: "Our success rate speaks for itself. We achieve results because we are grounded in our core values of innovation, collaboration, commitment, and excellence. Every project is a testament to our dedication."
+              }
+            ].map((card, idx) => (
+              <motion.div 
+                key={idx}
+                className="group bg-white rounded-[4rem] p-8 sm:p-12 md:p-16 border border-gray-100 shadow-sm hover:shadow-premium transition-all duration-700 relative overflow-hidden"
+                variants={staggerItem}
+                whileHover={{ y: -12 }}
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-green-50 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <div className="w-2 md:w-3 h-16 md:h-20 bg-green-600 rounded-full mb-8 md:mb-10 group-hover:h-24 transition-all duration-500"></div>
+                <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 md:mb-8 tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                  {card.title}
+                </h3>
+                <p className="text-gray-500 text-lg md:text-xl leading-relaxed font-medium">
+                  {card.desc}
+                </p>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </section>
 
       <Newsletter />
-
       <Footer />
     </div>
   );
