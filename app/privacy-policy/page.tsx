@@ -4,7 +4,6 @@ import { motion, Variants } from 'framer-motion';
 import { Shield, Lock, Eye, FileText, Scale, Database, CheckCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 
 export default function PrivacyPolicyPage() {
   // Animation variants
@@ -184,7 +183,6 @@ export default function PrivacyPolicyPage() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

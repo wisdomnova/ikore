@@ -1,10 +1,9 @@
 'use client';
 
-import { ChevronRight, Leaf, Sprout, Wind, Wheat, BarChart3, Users, Rocket, Globe, ArrowRight, ShieldCheck, Target, Zap, Heart } from 'lucide-react';
+import { Leaf, Rocket, Globe, ArrowRight, Target, Heart, BarChart3, Users, Wheat } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 
 export default function ServicesPage() {
 
@@ -37,56 +36,45 @@ export default function ServicesPage() {
   const mainServices = [
     {
       id: 1,
-      title: "Business Model Design and Advisory",
-      description: "We provide short-term technical assistance for small business enterprises and help them achieve their organizational goals through the development of market strategies, business model testing, proof of business concept and organizational capacity assessment exercises."
+      title: "Project Design & Implementation",
+      description: "We leverage our expertise to drive transformation through innovative projects tailored towards the economically disadvantaged and reaching the last mile. From concept development to execution, we partner with institutional stakeholders to design and deliver impact-driven development projects.",
+      icon: <Target size={28} />
     },
     {
       id: 2,
-      title: "Research, Learning and Capacity Building",
-      description: "Ikore has vast experience implementing different research methodologies with an array of technology for data collection, analysis and reports. In terms of capacity building, we offer bespoke training driven by insights into the needs of the participants."
+      title: "Market Systems & Value Chain Development",
+      description: "Our approach examines market dynamics and the relationships between different actors in the chain, with the objective of strengthening entire market systems. We map transactions, identify upgrade opportunities, and develop strategies that drive sustainable economic growth.",
+      icon: <BarChart3 size={28} />
     },
     {
       id: 3,
-      title: "Project Design and Execution",
-      description: "We leverage our expertise to drive transformation through innovative projects tailored towards the economically disadvantaged and reaching the last mile. We partner with institutional stakeholders to execute impact-driven projects."
+      title: "Business Model Design & Advisory",
+      description: "We provide technical assistance for enterprises to achieve their organizational goals through the development of market strategies, business model testing, proof of business concept, and organizational capacity assessment exercises.",
+      icon: <Rocket size={28} />
     },
     {
       id: 4,
-      title: "Value Chain & Policy Development",
-      description: "Our experts conduct value chain analysis for clients, mapping out the transactions and relationships and opportunities for upgrade. We provide policy recommendations to state and federal governments."
-    }
-  ];
-
-  const coreExpertise = [
-    {
-      id: 1,
-      title: "Value Chain Development",
-      description: "Our approach looks at market dynamics and relationships between the different actors in the chain with the objective of strengthening the whole market system."
-    },
-    {
-      id: 2,
-      title: "Private Sector Development",
-      description: "Promoting economic growth and reducing poverty by partnering and supporting private enterprises and developing projects."
-    },
-    {
-      id: 3,
-      title: "Capacity Building",
-      description: "Empowering individuals and organizations through structured workshops to set and achieve their own development goals."
-    },
-    {
-      id: 4,
-      title: "Gender and Youth Development",
-      description: "Ensuring inclusive participation and empowerment are at the core of every project to mitigate systemic barriers."
+      title: "Research, Evidence & Policy Support",
+      description: "Ikore has vast experience implementing different research methodologies with an array of technology for data collection, analysis, and reporting. We generate actionable evidence and provide policy recommendations to state and federal governments to inform development decisions.",
+      icon: <Globe size={28} />
     },
     {
       id: 5,
-      title: "Rural Entrepreneurship",
-      description: "Creating an enabling environment for rural development by facilitating access to financial assistance and networks."
+      title: "Enterprise & MSME Support",
+      description: "We promote economic growth and reduce poverty by partnering with and supporting private enterprises — particularly micro, small, and medium enterprises. We facilitate access to finance, markets, and networks that enable rural and urban entrepreneurship to thrive.",
+      icon: <Users size={28} />
     },
     {
       id: 6,
-      title: "Climate Smart Agriculture",
-      description: "Developing interventions that guide actions needed to transform and reorient agricultural systems for sustainability."
+      title: "Organizational & Human Capital Development",
+      description: "We empower individuals and organizations through bespoke training and capacity-building programmes driven by insights into participant needs. Our structured interventions help organizations set and achieve their own development goals with lasting results.",
+      icon: <Heart size={28} />
+    },
+    {
+      id: 7,
+      title: "Climate Resilience & Sustainability Solutions",
+      description: "We develop interventions that guide actions needed to transform and reorient agricultural systems for sustainability. Our climate-smart solutions help communities adapt to changing environments while maintaining productive and resilient livelihoods.",
+      icon: <Leaf size={28} />
     }
   ];
 
@@ -121,11 +109,11 @@ export default function ServicesPage() {
               className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 leading-[1.1] tracking-tight max-w-4xl mx-auto" 
               style={{ fontFamily: 'var(--font-heading)' }}
             >
-              Strategic <span className="text-green-600">Services</span> for Market Transformation
+              What We <span className="text-green-600">Do</span>
             </h1>
             
             <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              Comprehensive solutions designed to strengthen market systems and drive sustainable development across Africa&apos;s most critical sectors.
+              Ikore combines deep sector knowledge with innovative methodologies to deliver tailored solutions across the agriculture, food systems, and economic development landscape.
             </p>
 
             <div className="pt-8">
@@ -160,7 +148,7 @@ export default function ServicesPage() {
             variants={fadeInUp}
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
-              Tailored <span className="text-green-600">Development</span> Solutions
+              Our <span className="text-green-600">Services</span>
             </h2>
             <p className="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
               We leverage analytical rigor and deep market insights to design interventions that create lasting economic value.
@@ -168,7 +156,7 @@ export default function ServicesPage() {
           </motion.div>
 
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -195,12 +183,11 @@ export default function ServicesPage() {
                 <div className="absolute top-0 right-0 w-48 h-48 bg-green-50 rounded-bl-full opacity-5 hover:opacity-10 transition-opacity"></div>
                 
                 <div className="relative z-10">
-                  <div className="flex items-center gap-4 mb-6">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-green-600/40">Phase 0{service.id}</span>
-                    <div className="h-px flex-grow bg-gray-100"></div>
+                  <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 mb-6 group-hover:bg-green-600 group-hover:text-white transition-all duration-500">
+                    {service.icon}
                   </div>
 
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
                     {service.title}
                   </h3>
                   
@@ -213,50 +200,6 @@ export default function ServicesPage() {
                       Learn Service Scope <ArrowRight size={14} className="text-green-600" />
                     </a>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Core Expertise Section - Refined Grid */}
-      <section className="bg-white py-32 relative">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <motion.div 
-            className="text-center mb-16 sm:mb-24"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-          >
-            <div className="text-[10px] font-black uppercase tracking-[0.4em] text-green-600 mb-4 text-center">Vertical Excellence</div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900" style={{ fontFamily: 'var(--font-heading)' }}>
-              Specialized <span className="italic font-serif">Capacities</span>
-            </h2>
-          </motion.div>
-
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            {coreExpertise.map((expertise) => (
-              <motion.div
-                key={expertise.id}
-                className="group bg-white rounded-2xl sm:rounded-[2.5rem] p-8 sm:p-10 border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-green-900/5 transition-all duration-500 relative flex flex-col"
-                variants={staggerItem}
-                whileHover={{ y: -8 }}
-              >
-                <div className="relative z-10">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'var(--font-heading)' }}>
-                    {expertise.title}
-                  </h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">
-                    {expertise.description}
-                  </p>
                 </div>
               </motion.div>
             ))}
@@ -308,7 +251,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

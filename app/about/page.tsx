@@ -5,7 +5,6 @@ import { motion, Variants } from 'framer-motion';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 
 export default function AboutPage() {
   // Animation variants
@@ -73,7 +72,7 @@ export default function AboutPage() {
               </h1>
 
               <p className="text-gray-500 text-lg md:text-xl leading-relaxed max-w-2xl">
-                Ikore, meaning &quot;harvest&quot; in Yoruba, is an international development organization proffering innovative solutions to drive sustainable social and enterprise development.
+                Ikore (&quot;harvest&quot; in Yoruba) is an international development and consulting firm that designs and delivers innovative, market-led solutions to drive sustainable social and enterprise development. We see the world as a complex system of interdependencies, which is why we apply a systems thinking approach—working with governments, the private sector, and other non-state actors to unlock barriers to access, scale, and innovation.
               </p>
             </motion.div>
           </div>
@@ -148,10 +147,10 @@ export default function AboutPage() {
               
               <div className="space-y-8 text-lg sm:text-xl text-gray-500 leading-relaxed font-medium">
                 <p>
-                  Ikore&apos;s view of the world is one of a complex system with inter-dependencies. We work with the private, public sector and other non-state actors to address barriers to access, achieving scale, efficiency, and innovation in agribusiness and other sectors.
+                  Our view of the world is one of a complex system with inter-dependencies. We work with the private, public sector and other non-state actors to address barriers to access, achieving scale, efficiency, and innovation in agribusiness and other sectors.
                 </p>
                 <p>
-                  Whatever we do, we always aim to create a win-win situation for all actors, extending the access frontiers at every opportunity. We work in hard-to-reach, economically deprived places and vulnerable communities across Nigeria and Africa, providing solutions that support inefficient markets and communities.
+                  We operate in hard-to-reach and economically deprived communities across Nigeria and Africa, supporting fragile markets and vulnerable populations with inclusive, context-driven solutions. In the agrifood sector, we facilitate market competitiveness, strengthen value chains, and build resilient communities—ensuring that smallholder farmers, women, and youth are not left behind.
                 </p>
               </div>
 
@@ -266,17 +265,20 @@ export default function AboutPage() {
 
             <div className="lg:col-span-8">
               <motion.div 
-                className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={staggerContainer}
               >
                 {[
-                  { title: "Innovation", desc: "We apply new processes, introduce new techniques, and establish successful ideas to create new value.", icon: <Wind /> },
-                  { title: "Collaboration", desc: "We constantly update our systems, tools and knowledge with our partners to create an effective environment.", icon: <Users /> },
-                  { title: "Commitment", desc: "We strive to create and support an environment where people are committed to serving our beneficiaries.", icon: <Target /> },
-                  { title: "Excellence", desc: "All our projects are executed with the highest level of care within the scope of the requirements.", icon: <BarChart3 /> }
+                  { title: "Innovation", desc: "At Ikore, innovation drives everything we do. We constantly seek new, creative, and scalable approaches that solve complex development challenges and improve lives. By leveraging technology, local insights, and bold ideas, we design solutions that are both effective and sustainable.", icon: <Wind /> },
+                  { title: "Collaboration", desc: "We believe lasting change happens when we work together. By collaborating with state and non-state actors, communities, and partners, we co-create inclusive solutions that are practical, context-driven, and impactful.", icon: <Users /> },
+                  { title: "Accountability", desc: "Accountability is central to our work. We uphold the highest standards of transparency, integrity, and responsibility in all our operations and partnerships, ensuring trust and long-term impact.", icon: <Target /> },
+                  { title: "Excellence", desc: "Excellence guides Ikore's work, shaping a culture of professionalism, quality, and continuous improvement. We deliver evidence-based solutions that not only meet expectations but also create measurable impact.", icon: <BarChart3 /> },
+                  { title: "Adaptability", desc: "We understand that development landscapes are complex and ever-changing. By remaining flexible and responsive to emerging realities, we continuously refine our approaches to ensure relevance and long-term sustainability.", icon: <Globe /> },
+                  { title: "Insight Driven", desc: "Rooted in data, research, and local knowledge, we combine evidence with on-the-ground realities to design solutions that are context-specific and responsive. This ensures every intervention is not only effective but also aligned with the real needs of the communities we serve.", icon: <Search /> },
+                  { title: "Learning", desc: "We embrace a learning culture, continuously evolving through feedback, experience, and reflection. By cultivating curiosity and adaptability, we refine our strategies, scale what works, and remain responsive to emerging challenges and opportunities.", icon: <Database /> }
                 ].map((val, i) => (
                   <motion.div 
                     key={i}
@@ -314,7 +316,7 @@ export default function AboutPage() {
                   Evidence Driven
                 </div>
                 <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 leading-tight" style={{ fontFamily: 'var(--font-heading)' }}>
-                  Ikore&apos;s Research <span className="text-green-600">Capability</span>
+                  Our Research <span className="text-green-600">Capability</span>
                 </h2>
               </div>
               <div className="space-y-8 text-lg sm:text-xl text-gray-500 leading-relaxed font-medium">
@@ -412,7 +414,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

@@ -4,7 +4,6 @@ import { MapPin, Mail, Phone, Clock, ArrowRight, Leaf, Send, Globe, MessageSquar
 import { motion, Variants } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 
 export default function ContactPage() {
   // Animation variants
@@ -255,7 +254,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

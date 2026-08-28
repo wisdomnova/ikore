@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 import { useProjects } from '@/hooks/useProjects';
 import Image from 'next/image';
 import { Project } from '@/lib/wordpress/types';
@@ -338,7 +337,6 @@ export default function ProjectsPage() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

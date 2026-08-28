@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 import { useBlogs } from '@/hooks/useBlogs';
 import {
   BlogGridSkeleton,
@@ -426,8 +425,6 @@ export default function BlogsPage() {
           )}
         </div>
       </section>
-
-      <Newsletter />
 
       <Footer />
     </div>

@@ -4,7 +4,6 @@ import { motion, Variants } from 'framer-motion';
 import { Network, ArrowRight, ArrowUpRight, Globe, Layers } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 
 export default function SitemapPage() {
   // Animation variants
@@ -198,7 +197,6 @@ export default function SitemapPage() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

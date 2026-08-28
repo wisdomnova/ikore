@@ -1,7 +1,6 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 interface LoaderProps {
@@ -10,10 +9,11 @@ interface LoaderProps {
 
 export default function Loader({ isVisible }: LoaderProps) {
   const [counter, setCounter] = useState(0);
+  const [showRoot, setShowRoot] = useState(false);
 
   useEffect(() => {
     if (!isVisible) return;
-    
+
     const interval = setInterval(() => {
       setCounter((prev) => {
         if (prev >= 100) {
@@ -22,9 +22,17 @@ export default function Loader({ isVisible }: LoaderProps) {
         }
         return prev + 1;
       });
-    }, 25); // ~2.5s to reach 100
+    }, 25);
 
-    return () => clearInterval(interval);
+    // Show root animation after text appears
+    const rootTimer = setTimeout(() => {
+      setShowRoot(true);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(rootTimer);
+    };
   }, [isVisible]);
 
   if (!isVisible) return null;
@@ -33,16 +41,16 @@ export default function Loader({ isVisible }: LoaderProps) {
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 1 }}
-        exit={{ 
+        exit={{
           opacity: 0,
-          transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] }
+          transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
         }}
         className="fixed inset-0 bg-[#0a0a0a] z-[9999] flex flex-col items-center justify-center overflow-hidden"
       >
         {/* Grain Overlay */}
         <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-grain"></div>
-        
-        {/* Topography Detail (Subtle background) */}
+
+        {/* Topography Detail */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
           <svg width="100%" height="100%" viewBox="0 0 1000 1000">
             <path d="M0 200 Q 250 150 500 200 T 1000 200" fill="none" stroke="white" strokeWidth="0.5" />
@@ -54,84 +62,111 @@ export default function Loader({ isVisible }: LoaderProps) {
 
         {/* Central Element */}
         <div className="relative z-10 flex flex-col items-center">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-12"
-          >
-            <div className="w-24 h-24 bg-green-600 rounded-[2.5rem] flex items-center justify-center text-white shadow-[0_0_50px_rgba(22,163,74,0.3)]">
-              <Sprout size={48} strokeWidth={1.5} />
+          {/* IKORE Text - appears first */}
+          <div className="relative mb-4">
+            <div className="overflow-hidden">
+              <motion.h1
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                className="text-white text-5xl md:text-8xl font-bold tracking-tighter relative"
+                style={{ fontFamily: 'var(--font-heading)' }}
+              >
+                <span>IK</span>
+                <span className="relative inline-block">
+                  O
+                  {/* Root/vine that passes through the "O" */}
+                  {showRoot && (
+                    <motion.svg
+                      viewBox="0 0 60 80"
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1.2em] h-[1.6em] pointer-events-none"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {/* Root stem growing upward through the O */}
+                      <motion.path
+                        d="M30 75 C30 60 25 50 30 40 C35 30 28 20 30 5"
+                        fill="none"
+                        stroke="#22c55e"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                      />
+                      {/* Left leaf */}
+                      <motion.path
+                        d="M30 25 C22 20 18 12 24 8 C28 5 30 15 30 25"
+                        fill="#22c55e"
+                        fillOpacity="0.6"
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 1.0 }}
+                      />
+                      {/* Right leaf */}
+                      <motion.path
+                        d="M30 18 C38 14 42 6 36 3 C32 1 30 10 30 18"
+                        fill="#22c55e"
+                        fillOpacity="0.6"
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 1.3 }}
+                      />
+                      {/* Small root branches at bottom */}
+                      <motion.path
+                        d="M30 70 C25 72 20 75 18 78"
+                        fill="none"
+                        stroke="#22c55e"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeOpacity="0.5"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.5, delay: 0.8 }}
+                      />
+                      <motion.path
+                        d="M30 72 C35 74 40 76 42 80"
+                        fill="none"
+                        stroke="#22c55e"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeOpacity="0.5"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.5, delay: 0.9 }}
+                      />
+                    </motion.svg>
+                  )}
+                </span>
+                <span>RE</span>
+              </motion.h1>
             </div>
-          </motion.div>
-
-          {/* Text Reveal */}
-          <div className="overflow-hidden mb-4">
-            <motion.h1 
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="text-white text-5xl md:text-7xl font-bold tracking-tighter"
-              style={{ fontFamily: 'var(--font-heading)' }}
-            >
-              IKORE
-            </motion.h1>
           </div>
 
-          {/* Tagline - Typewriter Effect */}
+          {/* Tagline */}
           <div className="h-4 flex items-center justify-center mb-16 w-full px-6">
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              transition={{ delay: 1.5 }}
               className="text-white/40 text-[10px] uppercase font-black text-center tracking-[0.25em] sm:tracking-[0.4em] whitespace-nowrap"
             >
-              {[
-                "Cultivating",
-                "Sustainable Impact",
-              ].map((line, lineIndex) => (
-                <span key={lineIndex} className="inline">
-                  {line.split("").map((char, charIndex) => {
-                    const previousChars = lineIndex === 0 ? 0 : "Cultivating".length + 1;
-                    const animationIndex = previousChars + charIndex;
-
-                    return (
-                      <motion.span
-                        key={`${lineIndex}-${charIndex}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 + (animationIndex * 0.04), duration: 0.1 }}
-                      >
-                        {char}
-                      </motion.span>
-                    );
-                  })}
-                  {lineIndex === 0 ? (
-                    <>
-                      <br className="sm:hidden" />
-                      <span className="hidden sm:inline"> </span>
-                    </>
-                  ) : null}
-                </span>
-              ))}
-              <motion.span
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                className="inline-block w-1 h-3 bg-green-600/40 ml-1"
-              />
+              Cultivating Sustainable Impact
             </motion.p>
           </div>
 
           {/* Progress Section */}
           <div className="flex flex-col items-center gap-4">
             <div className="w-48 h-px bg-white/10 relative overflow-hidden">
-              <motion.div 
+              <motion.div
                 className="absolute inset-y-0 left-0 bg-green-600"
                 initial={{ width: 0 }}
                 animate={{ width: `${counter}%` }}
                 transition={{ duration: 0.1 }}
               />
             </div>
-            <motion.div 
+            <motion.div
               className="text-white/60 text-sm font-mono tracking-widest"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

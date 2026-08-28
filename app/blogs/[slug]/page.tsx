@@ -7,7 +7,6 @@ import { ChevronLeft, Calendar, User, Clock, Share2, ArrowRight, Bookmark, Wheat
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 import Loader from '@/components/Loader';
 import { getBlogBySlug } from '@/lib/wordpress/queries';
 import { BlogPost } from '@/lib/wordpress/types';
@@ -369,7 +368,6 @@ export default function BlogDetailPage() {
         )}
       </AnimatePresence>
 
-      <Newsletter />
       <Footer />
     </main>
   );

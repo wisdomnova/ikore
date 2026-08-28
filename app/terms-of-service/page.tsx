@@ -4,7 +4,6 @@ import { motion, Variants } from 'framer-motion';
 import { FileText, Gavel, Scale, AlertCircle, ExternalLink, ScrollText, CheckCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 
 export default function TermsOfServicePage() {
   // Animation variants
@@ -179,7 +178,6 @@ export default function TermsOfServicePage() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

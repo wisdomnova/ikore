@@ -6,7 +6,6 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 
 interface TeamMember {
   id: number;
@@ -479,7 +478,6 @@ export default function TeamPage() {
         )}
       </AnimatePresence>
 
-      <Newsletter />
       <Footer />
     </div>
   );

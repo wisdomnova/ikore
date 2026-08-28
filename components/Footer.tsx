@@ -1,13 +1,29 @@
 'use client';
 
-import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook, Instagram, Sprout, Wheat } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Facebook, Instagram, Wheat, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import Image from 'next/image';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Newsletter submission:', { name, email });
+    setSubmitted(true);
+    setTimeout(() => {
+      setSubmitted(false);
+      setName('');
+      setEmail('');
+    }, 5000);
+  };
+
   return (
     <footer id="contact" className="relative bg-[#0a0a0a] text-white overflow-hidden border-t border-gray-900">
-      {/* Intricate Agriculture Detail: Subtle "Plowed Rows" Background Pattern (Easter Egg) */}
+      {/* Plowed Rows Background Pattern */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -19,23 +35,23 @@ export default function Footer() {
         </svg>
       </div>
 
-      {/* Modern Gradient Overlay */}
+      {/* Top gradient line */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-500/50 to-transparent"></div>
 
       {/* Content */}
       <div className="relative z-10 pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 mb-20">
-            
+
             {/* Brand Section */}
-            <div className="lg:col-span-5">
-              <motion.div 
+            <div className="lg:col-span-4">
+              <motion.div
                 className="relative w-44 h-14 mb-8"
                 whileHover={{ scale: 1.02 }}
               >
-                <Image 
-                  src="/ikore-white.png" 
-                  alt="Ikore Logo" 
+                <Image
+                  src="/ikore-white.png"
+                  alt="Ikore Logo"
                   fill
                   className="object-contain"
                 />
@@ -43,18 +59,15 @@ export default function Footer() {
               <p className="text-sm text-gray-400 leading-relaxed max-w-md mb-8">
                 International development organization, proffering innovative solutions to drive sustainable social and enterprise development across Africa.
               </p>
-              
-              {/* Agricultural Motif (Easter Egg) */}
               <div className="flex items-center gap-2 text-green-600/40 text-xs font-medium uppercase tracking-widest">
                 <Wheat size={14} />
                 <span>Cultivating Growth</span>
               </div>
             </div>
 
-            {/* Links & Contact Grid */}
-            <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-12">
-              
-              {/* Quick Links with "Seed" Bullets */}
+            {/* Quick Links & Contact */}
+            <div className="lg:col-span-4 grid grid-cols-1 md:grid-cols-2 gap-12">
+              {/* Quick Links */}
               <div>
                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-8 flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
@@ -66,11 +79,11 @@ export default function Footer() {
                     { href: '/services', label: 'Our Services' },
                     { href: '/projects', label: 'Projects' },
                     { href: '/team', label: 'Our Team' },
-                    { href: '/blogs', label: 'Blogs' }
+                    { href: '/blogs', label: 'Blogs' },
+                    { href: '/contact', label: 'Contact Us' }
                   ].map((link) => (
                     <li key={link.href}>
                       <a href={link.href} className="text-sm text-gray-400 hover:text-green-500 transition-all flex items-center gap-3 group">
-                        {/* Seed motif bullet */}
                         <div className="w-1 h-1 bg-gray-700 rounded-full group-hover:bg-green-500 group-hover:scale-150 transition-all"></div>
                         {link.label}
                       </a>
@@ -79,11 +92,11 @@ export default function Footer() {
                 </ul>
               </div>
 
-              {/* Contact Info */}
+              {/* Contact Info (Abuja HQ) */}
               <div>
                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-8 flex items-center gap-3">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                  Get In Touch
+                  Contact (HQ)
                 </h3>
                 <div className="space-y-6">
                   <div className="flex items-start gap-4 group">
@@ -112,21 +125,65 @@ export default function Footer() {
                   </div>
                 </div>
               </div>
+            </div>
 
+            {/* Stay Updated (Newsletter - name + email only, no phone) */}
+            <div className="lg:col-span-4">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-8 flex items-center gap-3">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                Stay Updated With Our Work
+              </h3>
+              <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                Subscribe to receive updates on our latest projects, insights, and impact stories.
+              </p>
+              <form onSubmit={handleNewsletterSubmit} className="space-y-3">
+                <input
+                  type="text"
+                  placeholder="Your Full Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-600/30 focus:border-green-600/50 transition-all"
+                />
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-600/30 focus:border-green-600/50 transition-all"
+                />
+                <button
+                  type="submit"
+                  disabled={submitted}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
+                >
+                  {submitted ? (
+                    <>
+                      <CheckCircle2 size={16} />
+                      Subscribed!
+                    </>
+                  ) : (
+                    <>
+                      <Mail size={16} />
+                      Subscribe
+                    </>
+                  )}
+                </button>
+              </form>
             </div>
           </div>
 
           {/* Social & Bottom Bar */}
           <div className="pt-12 border-t border-gray-900">
             <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-              
-              {/* Social Icons */}
+
+              {/* Social Icons (No Twitter/X - LinkedIn, Facebook, Instagram only) */}
               <div className="flex items-center gap-3">
                 {[
-                  { href: 'https://linkedin.com/...', icon: Linkedin, label: 'LinkedIn' },
-                  { href: 'https://twitter.com/...', icon: Twitter, label: 'Twitter' },
-                  { href: 'https://facebook.com/...', icon: Facebook, label: 'Facebook' },
-                  { href: 'https://instagram.com/...', icon: Instagram, label: 'Instagram' }
+                  { href: 'https://linkedin.com/company/ikore', icon: Linkedin, label: 'LinkedIn' },
+                  { href: 'https://facebook.com/ikore', icon: Facebook, label: 'Facebook' },
+                  { href: 'https://instagram.com/ikore', icon: Instagram, label: 'Instagram' }
                 ].map((social) => {
                   const Icon = social.icon;
                   return (
@@ -152,10 +209,10 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Minimal Copyright */}
+            {/* Copyright */}
             <div className="mt-12 text-center">
               <p className="text-[11px] text-gray-700 font-medium tracking-tight">
-                © 2026 IKORE INTERNATIONAL DEVELOPMENT LIMITED. SUSTAINABLE SOCIAL AND ENTERPRISE DEVELOPMENT.
+                &copy; 2026 IKORE INTERNATIONAL DEVELOPMENT LIMITED. SUSTAINABLE SOCIAL AND ENTERPRISE DEVELOPMENT.
               </p>
             </div>
           </div>

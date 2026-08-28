@@ -5,8 +5,6 @@ import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
-
 import { BlogGridSkeleton } from '@/components/BlogSkeleton';
 
 interface Innovation {
@@ -336,7 +334,6 @@ export default function InnovationsPage() {
         </div>
       </section>
 
-      <Newsletter />
       <Footer />
     </div>
   );

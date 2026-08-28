@@ -7,7 +7,6 @@ import { ChevronLeft, Calendar, Tag as TagIcon, Layout, ArrowRight, Wheat, Sprou
 import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import Newsletter from '@/components/Newsletter';
 import { getProjectBySlug } from '@/lib/wordpress/queries';
 import { Project, Tag } from '@/lib/wordpress/types';
 
@@ -361,7 +360,6 @@ export default function ProjectDetailPage() {
         </>
       )}
 
-      <Newsletter />
       <Footer />
     </div>
   );
